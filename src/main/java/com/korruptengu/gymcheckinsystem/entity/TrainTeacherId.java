@@ -8,14 +8,14 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TrainId implements Serializable {
+public class TrainTeacherId implements Serializable {
     private Long instructor;
     private Long student;
 
     @Override
     public boolean equals(Object o){
         if (this == o) return true;
-        if (!(o instanceof TrainId other)) return false;
+        if (!(o instanceof TrainTeacherId other)) return false;
         return Objects.equals(this.instructor, other.instructor) && Objects.equals(this.student, other.student);
     }
 

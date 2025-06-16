@@ -18,10 +18,12 @@ public class Trainer {
     private String firstname;
     @Column(nullable = false)
     private String lastname;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String specialty;
     @Column(nullable = false)
     private LocalDate hireDate;
+    @Column(nullable = false)
+    private TrainerState state = TrainerState.NORMAL;
 
     public Trainer(String firstname, String lastname, LocalDate hireDate){
         if (firstname == null || firstname.isBlank()) throw new IllegalArgumentException("Firstname must not be null or blank");
@@ -30,6 +32,7 @@ public class Trainer {
         this.firstname = firstname.trim().replaceAll("\\s{2,}", " ");
         this.lastname = lastname.trim().replaceAll("\\s{2,}", " ");
         this.hireDate = hireDate;
+        this.specialty = null;
     }
 
     public Trainer(String firstname, String lastname, LocalDate hireDate, String specialty){

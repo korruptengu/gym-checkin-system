@@ -3,12 +3,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@IdClass(TrainId.class)
+@IdClass(TrainTeacherId.class)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Train {
+public class TrainTeacher {
 
     @Id
     @ManyToOne

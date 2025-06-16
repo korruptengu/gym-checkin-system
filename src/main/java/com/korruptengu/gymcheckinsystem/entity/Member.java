@@ -32,7 +32,7 @@ public class Member {
     public Member(String firstname, String lastname, MemberState state) {
         if (firstname == null || firstname.isBlank()) throw new IllegalArgumentException("Firstname must not be null or blank");
         if (lastname == null || lastname.isBlank()) throw new IllegalArgumentException("Lastname must not be null or blank");
-        if (state == null) throw new IllegalArgumentException("state must not be null");
+        if (state == null) throw new NullPointerException("state must not be null");
         this.firstname = firstname.trim().replaceAll("\\s{2,}", " ");
         this.lastname = lastname.trim().replaceAll("\\s{2,}", " ");
         this.state = state;
