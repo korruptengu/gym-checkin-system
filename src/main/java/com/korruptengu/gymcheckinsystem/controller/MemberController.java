@@ -21,30 +21,24 @@ public class MemberController {
         return memberService.getAllMembers();
     }
 
-    @PostMapping
-    public ResponseEntity<Member> createMember(@RequestBody Member member){
-        return ResponseEntity.ok(memberService.createMember(member));
-
+    @GetMapping("/{id}")
+    public Member getMemberById(@PathVariable Long id){
+        return memberService.getMemberById(id);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Member> getMemberById(@PathVariable Long id){
-        Member member = memberService.getMemberbyId(id);
-        if (member != null) return ResponseEntity.ok(member);
-        else return ResponseEntity.notFound().build();
+    @PostMapping
+    public Member createMember(@RequestBody Member member){
+        return memberService.createMember(member);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id){
-        boolean deleted = memberService.deleteMember(id);
-        if (deleted) return ResponseEntity.noContent().build();
-        else return ResponseEntity.notFound().build();
+        memberService.deleteMember(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Member> updateMember(@PathVariable Long id, @RequestBody Member updated){
-        Member updatedMember = memberService.updateMember(id, updated);
-        if (updatedMember != null) return ResponseEntity.ok(updatedMember);
-        else return ResponseEntity.notFound().build();
+    public Member updateMember(@PathVariable Long id, @RequestBody Member updated){
+        return memberService.updateMember(id, updated);
     }
 }
