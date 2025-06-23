@@ -38,8 +38,8 @@ public class DataLoader implements CommandLineRunner {
 
         logger.info("Start der Dateninitialisierung...");
 
-        Member member1 = new Member("Peter", "Haupt");
-        Member member2 = new Member("Clara", "Lustermann ");
+        Member member1 = new Member("Peter", "Haupt", "pH@test.de");
+        Member member2 = new Member("Clara", "Lustermann", "clara.lustermann@test.com");
         memberRepository.save(member1);
         memberRepository.save(member2);
 

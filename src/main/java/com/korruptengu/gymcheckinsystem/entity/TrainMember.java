@@ -17,7 +17,7 @@ public class TrainMember {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private Member student;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
 }

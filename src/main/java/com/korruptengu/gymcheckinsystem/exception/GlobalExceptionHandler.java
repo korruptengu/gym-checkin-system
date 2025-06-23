@@ -35,4 +35,81 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Internal Server Error: " + ex.getMessage());
     }
+
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<String> handleMemberNotFound(MemberNotFoundException ex){
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(TrainerNotFoundException.class)
+    public ResponseEntity<String> handleTrainerNotFound(TrainerNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(CheckInNotFoundException.class)
+    public ResponseEntity<String> handleCheckInNotFound(CheckInNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(CourseTypeNotFoundException.class)
+    public ResponseEntity<String> handleCourseTypeNotFound(CourseTypeNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(CourseSessionNotFoundExeption.class)
+    public ResponseEntity<String> handleCourseSessionTypeNotFound(CourseSessionNotFoundExeption ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(CourseBookingNotFoundExeption.class)
+    public ResponseEntity<String> handleCourseBookingTypeNotFound(CourseBookingNotFoundExeption ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(TrainMemberNotFoundException.class)
+    public ResponseEntity<String> handleTrainMemberNotFoundException(TrainMemberNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(TrainTeacherNotFoundException.class)
+    public ResponseEntity<String> handleTrainTeacherNotFoundException(TrainTeacherNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateTrainTeacherException.class)
+    public ResponseEntity<String> handleDuplicateTrainTeacherException(DuplicateTrainTeacherException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateTrainMemberException.class)
+    public ResponseEntity<String> handleDuplicateTrainMemberException(DuplicateTrainMemberException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(EmptyUpdateDataException.class)
+    public ResponseEntity<String> handleEmptyUpdateDataException(EmptyUpdateDataException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
 }

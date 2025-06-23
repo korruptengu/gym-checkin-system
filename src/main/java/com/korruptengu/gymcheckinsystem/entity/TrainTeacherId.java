@@ -12,6 +12,11 @@ public class TrainTeacherId implements Serializable {
     private Long instructor;
     private Long student;
 
+    public TrainTeacherId(Long instructor, Long student){
+        this.instructor = instructor;
+        this.student = student;
+    }
+
     @Override
     public boolean equals(Object o){
         if (this == o) return true;

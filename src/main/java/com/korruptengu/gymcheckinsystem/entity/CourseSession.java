@@ -17,7 +17,7 @@ public class CourseSession {
     @Column(nullable = false)
     private LocalDateTime startTime;
     @Column(nullable = false)
-    private int duration;
+    private Integer duration;
 
     @ManyToOne
     @JoinColumn(name = "course_type_id", nullable = false)
