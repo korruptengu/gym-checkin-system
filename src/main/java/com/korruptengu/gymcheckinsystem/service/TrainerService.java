@@ -1,8 +1,10 @@
 package com.korruptengu.gymcheckinsystem.service;
 
 import com.korruptengu.gymcheckinsystem.entity.Trainer;
+import com.korruptengu.gymcheckinsystem.exception.EmptyUpdateDataException;
+import com.korruptengu.gymcheckinsystem.exception.TrainerNotFoundException;
 import com.korruptengu.gymcheckinsystem.repository.TrainerRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.korruptengu.gymcheckinsystem.util.update.TrainerUpdateHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +23,7 @@ public class TrainerService {
 
     public Trainer getTrainerById(Long id){
         return trainerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Trainer with Id: " + id + " not found"));
+                .orElseThrow(() -> new TrainerNotFoundException(id));
     }
 
     public Trainer createTrainer(Trainer trainer){
@@ -30,21 +32,26 @@ public class TrainerService {
     }
 
     public Trainer deleteTrainer(Long id){
-        Trainer trainer = trainerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Trainer with Id: " + id + " not found"));
-        trainerRepository.delete(trainer);
-        return trainer;
+        Trainer deleted = trainerRepository.findById(id)
+                .orElseThrow(() -> new TrainerNotFoundException(id));
+        trainerRepository.delete(deleted);
+        return deleted;
     }
 
-    public Trainer updateTrainer(Long id, Trainer trainerUpdate){
-        if (trainerUpdate == null) throw new IllegalArgumentException("Update data must not be null");
+    public Trainer updateTrainerCompletely(Long id, Trainer updateData){
+        if (updateData == null) throw new IllegalArgumentException("Update data must not be null");
         Trainer existingTrainer = trainerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Trainer with Id: " + id + " not found"));
-        if (trainerUpdate.getFirstname() != null) existingTrainer.setFirstname(trainerUpdate.getFirstname());
-        if (trainerUpdate.getLastname() != null) existingTrainer.setLastname(trainerUpdate.getLastname());
-        if (trainerUpdate.getState() != null) existingTrainer.setState(trainerUpdate.getState());
-        if (trainerUpdate.getSpecialty() != null) existingTrainer.setSpecialty(trainerUpdate.getSpecialty());
-        if (trainerUpdate.getHireDate() != null) existingTrainer.setHireDate(trainerUpdate.getHireDate());
+                .orElseThrow(() -> new TrainerNotFoundException(id));
+        TrainerUpdateHelper.updateCompletely(existingTrainer, updateData);
+        return trainerRepository.save(existingTrainer);
+    }
+
+    public Trainer updateTrainerPartially(Long id, Trainer updateData){
+        if (updateData == null) throw new IllegalArgumentException("Update data must not be null");
+        if (TrainerUpdateHelper.isAllFieldsNull(updateData)) throw new EmptyUpdateDataException();
+        Trainer existingTrainer = trainerRepository.findById(id)
+                .orElseThrow(() -> new TrainerNotFoundException(id));
+        TrainerUpdateHelper.updatePartially(existingTrainer, updateData);
         return trainerRepository.save(existingTrainer);
     }
 
