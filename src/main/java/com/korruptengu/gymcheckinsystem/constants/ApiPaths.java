@@ -8,8 +8,7 @@ public class ApiPaths {
     public static final String CHECK_INS = "/checkIns";
     public static final String COURSE_SESSIONS = "/courseSessions";
     public static final String COURSE_BOOKINGS = "/courseBookings";
-    public static final String TRAIN_MEMBERS = "/trainMembers";
-    public static final String TRAIN_MEMBER_ID = "/{trainerId}/{memberId}";
+    public static final String TRAINING_SESSIONS = "/trainingSessions";
     public static final String TRAIN_TEACHERS = "/trainTeachers";
     public static final String TRAIN_TEACHER_ID = "/{instructorId}/{studentId}";
     public static final String ROOT = "/";

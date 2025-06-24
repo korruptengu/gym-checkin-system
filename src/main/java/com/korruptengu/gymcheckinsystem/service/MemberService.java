@@ -48,7 +48,7 @@ public class MemberService {
 
     public Member updateMemberPartially(Long id, Member updateData){
         if (updateData == null) throw new IllegalArgumentException("Update data must not be null");
-        if (MemberUpdateHelper.isAllFieldsNull(updateData)) throw new EmptyUpdateDataException();
+        if (MemberUpdateHelper.isAllFielddsNull(updateData)) throw new EmptyUpdateDataException();
         Member existingMember  = memberRepository.findById(id)
                 .orElseThrow(() -> new MemberNotFoundException(id));
         MemberUpdateHelper.updatePartially(existingMember, updateData);

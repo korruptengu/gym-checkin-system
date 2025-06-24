@@ -45,8 +45,8 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<MemberResponse> createMember(@Valid @RequestBody PostMemberRequest request){
-        Member created = mapper.postRequestToEntity(request);
-        created = memberService.createMember(created);
+        Member created = memberService.createMember(
+                mapper.postRequestToEntity(request));
         URI location = URI.create(MEMBERS + "/" + created.getId());
         return ResponseEntity.created(location).body(mapper.toResponse(created));
     }

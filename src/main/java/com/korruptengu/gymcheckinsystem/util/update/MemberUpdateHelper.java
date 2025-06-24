@@ -17,7 +17,7 @@ public class MemberUpdateHelper {
         if (source.getState() != null) target.setState(source.getState());
     }
 
-    public static boolean isAllFieldsNull(Member member) {
+    public static boolean isAllFielddsNull(Member member) {
         return  member.getFirstname() == null &&
                 member.getLastname() == null &&
                 member.getEMail() == null &&

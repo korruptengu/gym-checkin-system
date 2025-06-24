@@ -10,27 +10,27 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CourseSession {
+public class TrainingSession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     private LocalDateTime startTime;
+
     @Column(nullable = false)
     private Duration duration;
-
-    @ManyToOne
-    @JoinColumn(name = "course_type_id", nullable = false)
-    private CourseType courseType;
 
     @ManyToOne
     @JoinColumn(name = "trainer_id", nullable = false)
     private Trainer trainer;
 
-    public CourseSession(LocalDateTime startTime, Duration duration, CourseType courseType,  Trainer trainer){
-        if (courseType == null || trainer == null) throw new NullPointerException("CourseType and Trainer must not be null");
-        this.courseType = courseType;
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    public TrainingSession(LocalDateTime startTime, Duration duration, Trainer trainer,  Member member){
+        this.member = member;
         this.trainer = trainer;
         this.startTime = startTime;
         this.duration = duration;

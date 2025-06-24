@@ -71,15 +71,15 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler(CourseBookingNotFoundExeption.class)
-    public ResponseEntity<String> handleCourseBookingTypeNotFound(CourseBookingNotFoundExeption ex) {
+    @ExceptionHandler(TrainingSessionNotFoundExeption.class)
+    public ResponseEntity<String> handleTrainingSessionNotFoundExeption(TrainingSessionNotFoundExeption ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler(TrainMemberNotFoundException.class)
-    public ResponseEntity<String> handleTrainMemberNotFoundException(TrainMemberNotFoundException ex) {
+    @ExceptionHandler(CourseBookingNotFoundExeption.class)
+    public ResponseEntity<String> handleCourseBookingTypeNotFound(CourseBookingNotFoundExeption ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ex.getMessage());
@@ -94,13 +94,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateTrainTeacherException.class)
     public ResponseEntity<String> handleDuplicateTrainTeacherException(DuplicateTrainTeacherException ex) {
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(ex.getMessage());
-    }
-
-    @ExceptionHandler(DuplicateTrainMemberException.class)
-    public ResponseEntity<String> handleDuplicateTrainMemberException(DuplicateTrainMemberException ex) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(ex.getMessage());
