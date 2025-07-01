@@ -5,10 +5,9 @@ import com.korruptengu.gymcheckinsystem.dto.request.trainer.PatchTrainerRequest;
 import com.korruptengu.gymcheckinsystem.dto.request.trainer.PostTrainerRequest;
 import com.korruptengu.gymcheckinsystem.dto.request.trainer.PutTrainerRequest;
 import com.korruptengu.gymcheckinsystem.dto.response.TrainerResponse;
-import com.korruptengu.gymcheckinsystem.entity.Trainer;
-import com.korruptengu.gymcheckinsystem.mapper.TrainerMapper;
 import com.korruptengu.gymcheckinsystem.service.TrainerService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,60 +16,51 @@ import java.util.List;
 
 @RestController
 @RequestMapping(TRAINERS)
+@AllArgsConstructor
 public class TrainerController {
-    private final TrainerService trainerService;
-    private final TrainerMapper mapper;
-
-    public TrainerController(TrainerService trainerService, TrainerMapper mapper) {
-        this.trainerService = trainerService;
-        this.mapper = mapper;
-    }
+    private final TrainerService service;
 
     @GetMapping
     public ResponseEntity<List<TrainerResponse>> getAllTrainers(){
-        List<Trainer> allTrainer = trainerService.getAllTrainers();
-        List<TrainerResponse> responseList = allTrainer.stream()
-                .map(mapper :: toResponse)
-                .toList();
+        List<TrainerResponse> allTrainers = service.getAllTrainers();
         return ResponseEntity
-                .ok(responseList);
+                .ok(allTrainers);
     }
 
     @GetMapping(ID)
     public ResponseEntity<TrainerResponse> getTrainerById(@PathVariable Long id){
-        Trainer trainer = trainerService.getTrainerById(id);
+        TrainerResponse trainer = service.getTrainerById(id);
         return ResponseEntity
-                .ok(mapper.toResponse(trainer));
+                .ok(trainer);
 
     }
 
     @PostMapping
     public ResponseEntity<TrainerResponse> createTrainer(@Valid @RequestBody PostTrainerRequest request){
-        Trainer created = trainerService.createTrainer(
-                mapper.postRequestToEntity(request));
-        URI location = URI.create(TRAINERS + "/" + created.getId());
+        TrainerResponse created = service.createTrainer(request);
+        URI location = URI.create(TRAINERS + "/" + created.id());
         return ResponseEntity
                 .created(location)
-                .body(mapper.toResponse(created));
+                .body(created);
     }
 
     @DeleteMapping(ID)
-    public ResponseEntity<Trainer> deleteTrainer(@PathVariable Long id){
-        return ResponseEntity.ok(trainerService.deleteTrainer(id));
+    public ResponseEntity<TrainerResponse> deleteTrainer(@PathVariable Long id){
+        return ResponseEntity.ok(service.deleteTrainerById(id));
     }
 
     @PutMapping(ID)
     public ResponseEntity<TrainerResponse> updateTrainer(@PathVariable Long id, @Valid @RequestBody PutTrainerRequest request){
-        Trainer updated = trainerService.updateTrainerCompletely(id, mapper.putRequestToEntity(request));
+        TrainerResponse updated = service.updateTrainerCompletely(id, request);
         return ResponseEntity
-                .ok(mapper.toResponse(updated));
+                .ok(updated);
     }
 
     @PatchMapping(ID)
     public ResponseEntity<TrainerResponse> partiallyUpdateTrainer(@PathVariable Long id, @RequestBody PatchTrainerRequest request){
-        Trainer updated = trainerService.updateTrainerPartially(id, mapper.patchRequestToEntity(request));
+        TrainerResponse updated = service.updateTrainerPartially(id, request);
         return ResponseEntity
-                .ok(mapper.toResponse(updated));
+                .ok(updated);
     }
 }
 

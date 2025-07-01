@@ -5,7 +5,7 @@ import com.korruptengu.gymcheckinsystem.dto.request.trainTeacher.PutTrainTeacher
 import com.korruptengu.gymcheckinsystem.dto.response.TrainTeacherResponse;
 import com.korruptengu.gymcheckinsystem.entity.TrainTeacher;
 import com.korruptengu.gymcheckinsystem.mapper.TrainTeacherMapper;
-import com.korruptengu.gymcheckinsystem.service.TrainTeacherService;
+import com.korruptengu.gymcheckinsystem.service.impl.TrainTeacherService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -19,7 +19,7 @@ public class TrainingSession {
     private LocalDateTime startTime;
 
     @Column(nullable = false)
-    private Duration duration;
+    private Integer durationInMinutes;
 
     @ManyToOne
     @JoinColumn(name = "trainer_id", nullable = false)
@@ -29,14 +29,13 @@ public class TrainingSession {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    public TrainingSession(LocalDateTime startTime, Duration duration, Trainer trainer,  Member member){
+    public TrainingSession(LocalDateTime startTime, Integer durationInMinutes, Trainer trainer,  Member member){
         this.member = member;
         this.trainer = trainer;
         this.startTime = startTime;
-        this.duration = duration;
+        this.durationInMinutes = durationInMinutes;
     }
 
-    public LocalDateTime getEndTime(){
-        return startTime.plusMinutes((int) duration.toMinutes());
+    public LocalDateTime getEndTime(){return startTime.plusMinutes((int) + durationInMinutes);
     }
 }

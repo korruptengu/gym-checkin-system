@@ -1,7 +1,10 @@
 package com.korruptengu.gymcheckinsystem.controller;
 
-import com.korruptengu.gymcheckinsystem.entity.CheckIn;
+import com.korruptengu.gymcheckinsystem.dto.request.checkIn.*;
+import com.korruptengu.gymcheckinsystem.dto.response.CheckInResponse;
 import com.korruptengu.gymcheckinsystem.service.CheckInService;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import static com.korruptengu.gymcheckinsystem.constants.ApiPaths.*;
@@ -11,37 +14,44 @@ import java.util.List;
 
 @RestController
 @RequestMapping(CHECK_INS)
+@AllArgsConstructor
 public class CheckInController {
-    private final CheckInService checkInService;
-
-    public CheckInController(CheckInService checkInService) {
-        this.checkInService = checkInService;
-    }
+    private final CheckInService service;
 
     @GetMapping
-    public List<CheckIn> getAllCheckIns(){
-        return checkInService.getAllCheckIns();
+    public ResponseEntity<List<CheckInResponse>> getAllCheckIns(){
+        List<CheckInResponse> allCheckIns = service.getAllCheckIns();
+        return ResponseEntity.ok(allCheckIns);
     }
 
     @GetMapping(ID)
-    public CheckIn getCheckInById(@PathVariable Long id){
-        return checkInService.getCheckInById(id);
+    public ResponseEntity<CheckInResponse> getCheckInById(@PathVariable Long id){
+        CheckInResponse checkIn = service.getCheckInById(id);
+        return ResponseEntity.ok(checkIn);
     }
 
     @PostMapping
-    public ResponseEntity<CheckIn> createCheckInBy(@RequestBody CheckIn checkIn){
-        CheckIn createdCheckIn = checkInService.createCheckIn(checkIn);
-        URI location = URI.create(CHECK_INS + "/" + createdCheckIn.getId());
+    public ResponseEntity<CheckInResponse> createCheckInBy(@Valid @RequestBody PostCheckInRequest request){
+        CheckInResponse createdCheckIn = service.createCheckIn(request);
+        URI location = URI.create(CHECK_INS + "/" + createdCheckIn.id());
         return ResponseEntity.created(location).body(createdCheckIn);
     }
 
     @DeleteMapping(ID)
-    public ResponseEntity<CheckIn> deleteCheckIn(@PathVariable Long id){
-        return ResponseEntity.ok(checkInService.deleteCheckIn(id));
+    public ResponseEntity<CheckInResponse> deleteCheckIn(@PathVariable Long id){
+        CheckInResponse deleted = service.deleteCheckInById(id);
+        return ResponseEntity.ok(deleted);
     }
 
     @PutMapping(ID)
-    public ResponseEntity<CheckIn> updateCheckIn(@PathVariable Long id, @RequestBody CheckIn updated){
-        return ResponseEntity.ok(checkInService.updateCheckIn(id, updated));
+    public ResponseEntity<CheckInResponse> updateCheckIn(@PathVariable Long id, @Valid @RequestBody PutCheckInRequest request){
+        CheckInResponse updated = service.updateCheckInCompletely(id, request);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PatchMapping(ID)
+    public ResponseEntity<CheckInResponse> partiallyUpdateMember(@PathVariable Long id, @RequestBody PatchCheckInRequest request){
+        CheckInResponse updated = service.updateCheckInPartially(id, request);
+        return ResponseEntity.ok(updated);
     }
 }

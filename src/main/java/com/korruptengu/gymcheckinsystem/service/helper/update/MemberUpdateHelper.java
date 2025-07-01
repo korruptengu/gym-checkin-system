@@ -1,4 +1,4 @@
-package com.korruptengu.gymcheckinsystem.util.update;
+package com.korruptengu.gymcheckinsystem.service.helper.update;
 
 import com.korruptengu.gymcheckinsystem.entity.Member;
 
@@ -6,21 +6,21 @@ public class MemberUpdateHelper {
     public static void updateCompletely(Member target, Member source){
         target.setFirstname(source.getFirstname());
         target.setLastname(source.getLastname());
-        target.setEMail(source.getEMail());
+        target.setEmail(source.getEmail());
         target.setState(source.getState());
     }
 
     public static void updatePartially(Member target, Member source){
         if (source.getFirstname() != null) target.setFirstname(source.getFirstname());
         if (source.getLastname() != null) target.setLastname(source.getLastname());
-        if (source.getEMail() != null) target.setEMail(source.getEMail());
+        if (source.getEmail() != null) target.setEmail(source.getEmail());
         if (source.getState() != null) target.setState(source.getState());
     }
 
-    public static boolean isAllFielddsNull(Member member) {
+    public static boolean isAllFieldsNull(Member member) {
         return  member.getFirstname() == null &&
                 member.getLastname() == null &&
-                member.getEMail() == null &&
+                member.getEmail() == null &&
                 member.getState() == null;
     }
 }

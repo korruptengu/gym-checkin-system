@@ -1,4 +1,4 @@
-package com.korruptengu.gymcheckinsystem.util.update;
+package com.korruptengu.gymcheckinsystem.service.helper.update;
 
 import com.korruptengu.gymcheckinsystem.entity.Trainer;
 

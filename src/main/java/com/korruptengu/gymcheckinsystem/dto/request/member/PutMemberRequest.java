@@ -8,6 +8,6 @@ import jakarta.validation.constraints.NotNull;
 public record PutMemberRequest(
         @NotBlank String firstname,
         @NotBlank String lastname,
-        @Email String eMail,
+        @Email String email,
         @NotNull MemberState state
 ) {}

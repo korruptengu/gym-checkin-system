@@ -1,6 +1,7 @@
 package com.korruptengu.gymcheckinsystem.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 import java.time.Duration;
@@ -18,7 +19,7 @@ public class CourseSession {
     @Column(nullable = false)
     private LocalDateTime startTime;
     @Column(nullable = false)
-    private Duration duration;
+    private Integer durationInMinutes;
 
     @ManyToOne
     @JoinColumn(name = "course_type_id", nullable = false)
@@ -28,15 +29,15 @@ public class CourseSession {
     @JoinColumn(name = "trainer_id", nullable = false)
     private Trainer trainer;
 
-    public CourseSession(LocalDateTime startTime, Duration duration, CourseType courseType,  Trainer trainer){
-        if (courseType == null || trainer == null) throw new NullPointerException("CourseType and Trainer must not be null");
+    public CourseSession(LocalDateTime startTime, Integer durationInMinutes, CourseType courseType, Trainer trainer){
         this.courseType = courseType;
         this.trainer = trainer;
         this.startTime = startTime;
-        this.duration = duration;
+        this.durationInMinutes = durationInMinutes;
     }
 
+
     public LocalDateTime getEndTime(){
-        return startTime.plusMinutes((int) duration.toMinutes());
+        return startTime.plusMinutes((int) + durationInMinutes);
     }
 }

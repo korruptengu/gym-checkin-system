@@ -17,7 +17,7 @@ public class Member {
     @Column(nullable = false)
     private String lastname;
     @Column(nullable = false)
-    private String eMail;
+    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -29,7 +29,7 @@ public class Member {
         if (lastname == null || lastname.isBlank()) throw new IllegalArgumentException("Lastname must not be null or blank");
         this.firstname = firstname.trim().replaceAll("\\s{2,}", " ");
         this.lastname = lastname.trim().replaceAll("\\s{2,}", " ");
-        this.eMail = eMail.trim().replaceAll("\\s{2,}", " ");
+        this.email = eMail.trim().replaceAll("\\s{2,}", " ");
     }
 
     public Member(String firstname, String lastname, String eMail, MemberState state) {
@@ -38,7 +38,7 @@ public class Member {
         if (state == null) throw new NullPointerException("state must not be null");
         this.firstname = firstname.trim().replaceAll("\\s{2,}", " ");
         this.lastname = lastname.trim().replaceAll("\\s{2,}", " ");
-        this.eMail = eMail.trim().replaceAll("\\s{2,}", " ");
+        this.email = eMail.trim().replaceAll("\\s{2,}", " ");
         this.state = state;
     }
 }

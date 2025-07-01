@@ -64,22 +64,22 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler(CourseSessionNotFoundExeption.class)
-    public ResponseEntity<String> handleCourseSessionTypeNotFound(CourseSessionNotFoundExeption ex) {
+    @ExceptionHandler(CourseSessionNotFoundException.class)
+    public ResponseEntity<String> handleCourseSessionTypeNotFound(CourseSessionNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler(TrainingSessionNotFoundExeption.class)
-    public ResponseEntity<String> handleTrainingSessionNotFoundExeption(TrainingSessionNotFoundExeption ex) {
+    @ExceptionHandler(TrainingSessionNotFoundException.class)
+    public ResponseEntity<String> handleTrainingSessionNotFound(TrainingSessionNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler(CourseBookingNotFoundExeption.class)
-    public ResponseEntity<String> handleCourseBookingTypeNotFound(CourseBookingNotFoundExeption ex) {
+    @ExceptionHandler(CourseBookingNotFoundException.class)
+    public ResponseEntity<String> handleCourseBookingNotFound(CourseBookingNotFoundException ex) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ex.getMessage());

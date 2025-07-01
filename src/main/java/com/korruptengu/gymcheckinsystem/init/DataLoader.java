@@ -5,6 +5,7 @@ import com.korruptengu.gymcheckinsystem.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -53,7 +54,7 @@ public class DataLoader implements CommandLineRunner {
         courseTypeRepository.save(courseType1);
         courseTypeRepository.save(courseType2);
 
-        CourseSession courseSession1 = new CourseSession(LocalDateTime.now().minusDays(2).minusHours(4), 3, courseType1, trainer2);
+        CourseSession courseSession1 = new CourseSession(LocalDateTime.now().minusDays(2).minusHours(4), 45, courseType1, trainer2);
         courseSessionRepository.save(courseSession1);
 
         CheckIn checkIn1 = new CheckIn(LocalDateTime.now(), member1);

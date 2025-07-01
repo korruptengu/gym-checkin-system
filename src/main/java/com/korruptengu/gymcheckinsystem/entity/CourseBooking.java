@@ -4,26 +4,27 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 public class CourseBooking {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
+    @EmbeddedId
+    private CourseBookingId id;
 
     @ManyToOne
+    @MapsId("memberId")
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @ManyToOne
+    @MapsId("courseSessionId")
     @JoinColumn(name = "course_session_id", nullable = false)
     private CourseSession courseSession;
 
-    public CourseBooking(Member member, CourseSession courseSession){
-        if (member == null  || courseSession == null) throw new NullPointerException("Member and CourseSession must not be null");
-        this.member = member;
-        this.courseSession = courseSession;
-    }
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;
 
+    private boolean attended = false;
 }

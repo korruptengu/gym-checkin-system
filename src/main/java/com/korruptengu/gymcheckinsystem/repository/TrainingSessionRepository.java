@@ -7,7 +7,4 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TrainingSessionRepository extends JpaRepository<TrainingSession, Long> {
-    List<TrainingSession> findByTrainerId(Long trainerId);
-    List<TrainingSession> findByMemberId(Long memberId);
-    List<TrainingSession> findByTrainerIdAndStartTimeBetween(Long trainerId, LocalDateTime start, LocalDateTime end);
 }

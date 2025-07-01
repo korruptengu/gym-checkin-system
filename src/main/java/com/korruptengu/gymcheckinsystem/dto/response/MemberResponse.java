@@ -1,8 +1,11 @@
 package com.korruptengu.gymcheckinsystem.dto.response;
 
+import com.korruptengu.gymcheckinsystem.entity.MemberState;
+
 public record MemberResponse(
         Long id,
         String firstname,
         String lastname,
-        String eMail
+        String email,
+        MemberState state
 ) {}

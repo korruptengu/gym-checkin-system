@@ -7,6 +7,6 @@ import com.korruptengu.gymcheckinsystem.entity.MemberState;
 public record PatchMemberRequest(
          String firstname,
          String lastname,
-         String eMail,
+         String email,
          MemberState state) {
 }

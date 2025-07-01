@@ -6,12 +6,6 @@ import com.korruptengu.gymcheckinsystem.dto.request.trainingSession.PatchTrainin
 import com.korruptengu.gymcheckinsystem.dto.request.trainingSession.PostTrainingSessionRequest;
 import com.korruptengu.gymcheckinsystem.dto.request.trainingSession.PutTrainingSessionRequest;
 import com.korruptengu.gymcheckinsystem.dto.response.TrainingSessionResponse;
-import com.korruptengu.gymcheckinsystem.entity.Member;
-import com.korruptengu.gymcheckinsystem.entity.Trainer;
-import com.korruptengu.gymcheckinsystem.entity.TrainingSession;
-import com.korruptengu.gymcheckinsystem.mapper.TrainingSessionMapper;
-import com.korruptengu.gymcheckinsystem.service.MemberService;
-import com.korruptengu.gymcheckinsystem.service.TrainerService;
 import com.korruptengu.gymcheckinsystem.service.TrainingSessionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,61 +20,53 @@ import java.util.List;
 @RequestMapping(TRAINING_SESSIONS)
 @RequiredArgsConstructor
 public class TrainingSessionController {
-    private final TrainingSessionService trainingSessionService;
-    private final MemberService memberService;
-    private final TrainerService trainerService;
-    private final TrainingSessionMapper mapper;
+    private final TrainingSessionService service;
 
     @GetMapping
     public ResponseEntity<List<TrainingSessionResponse>> getAllTrainingSessions(){
-        List<TrainingSession> allTrainingSessions = trainingSessionService.getAllTrainingSessions();
-        List<TrainingSessionResponse> responseList = allTrainingSessions.stream()
-                .map(mapper :: toResponse)
-                .toList();
+        List<TrainingSessionResponse> allTrainingSessions = service.getAllTrainingSessions();
         return ResponseEntity
-                .ok(responseList);
+                .ok(allTrainingSessions);
     }
 
     @GetMapping(ID)
     public ResponseEntity<TrainingSessionResponse> getTrainingSessionById(@PathVariable Long id){
-        TrainingSession trainingSession = trainingSessionService.getTrainingSessionById(id);
+        TrainingSessionResponse trainingSession = service.getTrainingSessionById(id);
         return ResponseEntity
-                .ok(mapper.toResponse(trainingSession));
+                .ok(trainingSession);
     }
 
     @PostMapping
     public ResponseEntity<TrainingSessionResponse> createTrainingSession(@Valid @RequestBody PostTrainingSessionRequest request){
-        Member member = memberService.getMemberById(request.memberId());
-        Trainer trainer = trainerService.getTrainerById(request.trainerId());
-        TrainingSession created = trainingSessionService.createTrainingSession(
-                new TrainingSession(request.startTime(), request.duration(), trainer, member));
-        URI location = URI.create(TRAINING_SESSIONS + "/" + created.getId());
+
+        TrainingSessionResponse created = service.createTrainingSession(request);
+        URI location = URI.create(TRAINING_SESSIONS + "/" + created.id());
         return ResponseEntity
-                .created(location).body(mapper.toResponse(created));
+                .created(location).body(created);
     }
 
     @DeleteMapping(ID)
     public ResponseEntity<TrainingSessionResponse> deleteTrainingSession(@PathVariable Long id){
-        TrainingSession deleted = trainingSessionService.deleteTrainingSession(id);
+        TrainingSessionResponse deleted = service.deleteTrainingSessionById(id);
         return ResponseEntity
-                .ok(mapper.toResponse(deleted));
+                .ok(deleted);
     }
 
     @PutMapping(ID)
     public ResponseEntity<TrainingSessionResponse> updateTrainingSession(@PathVariable Long id, @Valid @RequestBody PutTrainingSessionRequest request){
-        TrainingSession updated = trainingSessionService
-                .updateTrainingSessionCompletely(id, mapper.putRequestToEntity(request));
+        TrainingSessionResponse updated = service
+                .updateTrainingSessionCompletely(id, request);
         return ResponseEntity
-                .ok(mapper.toResponse(updated));
+                .ok(updated);
     }
 
     // Kein @Valid – Felder im PatchRequest sind optional
     @PatchMapping(ID)
     public ResponseEntity<TrainingSessionResponse> partiallyUpdateTrainingSession(@PathVariable Long id, @RequestBody PatchTrainingSessionRequest request){
-        TrainingSession updated = trainingSessionService
-                .updateTrainingSessionPartially(id, mapper.patchRequestToEntity(request));
+        TrainingSessionResponse updated = service
+                .updateTrainingSessionPartially(id, request);
         return ResponseEntity
-                .ok(mapper.toResponse(updated));
+                .ok(updated);
     }
 
 }

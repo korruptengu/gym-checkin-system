@@ -7,6 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 public record PostMemberRequest(
         @NotBlank String firstname,
         @NotBlank String lastname,
-        @Email String eMail,
+        @Email String email,
         MemberState state
 ) {}

@@ -1,4 +1,4 @@
-package com.korruptengu.gymcheckinsystem.service;
+package com.korruptengu.gymcheckinsystem.service.impl;
 
 import com.korruptengu.gymcheckinsystem.entity.TrainTeacher;
 import com.korruptengu.gymcheckinsystem.entity.TrainTeacherId;
