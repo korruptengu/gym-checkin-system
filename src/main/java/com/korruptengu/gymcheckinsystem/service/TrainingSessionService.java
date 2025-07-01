@@ -1,11 +1,9 @@
 package com.korruptengu.gymcheckinsystem.service;
 
-import com.korruptengu.gymcheckinsystem.dto.request.trainer.PatchTrainerRequest;
 import com.korruptengu.gymcheckinsystem.dto.request.trainingSession.PatchTrainingSessionRequest;
 import com.korruptengu.gymcheckinsystem.dto.request.trainingSession.PostTrainingSessionRequest;
 import com.korruptengu.gymcheckinsystem.dto.request.trainingSession.PutTrainingSessionRequest;
 import com.korruptengu.gymcheckinsystem.dto.response.TrainingSessionResponse;
-import com.korruptengu.gymcheckinsystem.entity.TrainingSession;
 
 import java.util.List;
 

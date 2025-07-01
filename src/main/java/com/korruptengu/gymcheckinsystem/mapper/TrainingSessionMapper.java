@@ -1,11 +1,9 @@
 package com.korruptengu.gymcheckinsystem.mapper;
 
-import com.korruptengu.gymcheckinsystem.dto.request.trainer.PostTrainerRequest;
 import com.korruptengu.gymcheckinsystem.dto.request.trainingSession.PatchTrainingSessionRequest;
 import com.korruptengu.gymcheckinsystem.dto.request.trainingSession.PostTrainingSessionRequest;
 import com.korruptengu.gymcheckinsystem.dto.request.trainingSession.PutTrainingSessionRequest;
 import com.korruptengu.gymcheckinsystem.dto.response.TrainingSessionResponse;
-import com.korruptengu.gymcheckinsystem.entity.Trainer;
 import com.korruptengu.gymcheckinsystem.entity.TrainingSession;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

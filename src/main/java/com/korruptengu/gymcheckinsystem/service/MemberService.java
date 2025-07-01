@@ -4,7 +4,6 @@ import com.korruptengu.gymcheckinsystem.dto.request.member.PatchMemberRequest;
 import com.korruptengu.gymcheckinsystem.dto.request.member.PostMemberRequest;
 import com.korruptengu.gymcheckinsystem.dto.request.member.PutMemberRequest;
 import com.korruptengu.gymcheckinsystem.dto.response.MemberResponse;
-import com.korruptengu.gymcheckinsystem.entity.Member;
 
 import java.util.List;
 

@@ -3,7 +3,6 @@ package com.korruptengu.gymcheckinsystem.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
@@ -36,6 +35,7 @@ public class TrainingSession {
         this.durationInMinutes = durationInMinutes;
     }
 
-    public LocalDateTime getEndTime(){return startTime.plusMinutes((int) + durationInMinutes);
+    public LocalDateTime getEndTime(){
+        return startTime.plusMinutes(this.durationInMinutes);
     }
 }

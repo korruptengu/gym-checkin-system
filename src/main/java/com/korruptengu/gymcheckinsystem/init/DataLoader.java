@@ -2,10 +2,10 @@ package com.korruptengu.gymcheckinsystem.init;
 
 import com.korruptengu.gymcheckinsystem.entity.*;
 import com.korruptengu.gymcheckinsystem.repository.*;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -13,26 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component
+@AllArgsConstructor
 public class DataLoader implements CommandLineRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(DataLoader.class);
-
     private final MemberRepository memberRepository;
     private final TrainerRepository trainerRepository;
     private final CheckInRepository checkInRepository;
-    private final CourseBookingRepository courseBookingRepository;
     private final CourseSessionRepository courseSessionRepository;
     private final CourseTypeRepository courseTypeRepository;
-
-
-    public DataLoader(MemberRepository memberRepository, TrainerRepository trainerRepository, CheckInRepository checkInRepository, CourseBookingRepository courseBookingRepository, CourseSessionRepository courseSessionRepository, CourseTypeRepository courseTypeRepository){
-        this.memberRepository = memberRepository;
-        this.trainerRepository = trainerRepository;
-        this.checkInRepository = checkInRepository;
-        this.courseBookingRepository = courseBookingRepository;
-        this.courseSessionRepository = courseSessionRepository;
-        this.courseTypeRepository = courseTypeRepository;
-    }
 
     @Override
     public void run(String... args){

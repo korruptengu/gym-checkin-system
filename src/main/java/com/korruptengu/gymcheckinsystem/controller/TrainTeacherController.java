@@ -1,11 +1,12 @@
 package com.korruptengu.gymcheckinsystem.controller;
 import static com.korruptengu.gymcheckinsystem.constants.ApiPaths.*;
 
-import com.korruptengu.gymcheckinsystem.dto.request.trainTeacher.PutTrainTeacherRequest;
+import com.korruptengu.gymcheckinsystem.dto.request.trainTeacher.PostTrainTeacherRequest;
 import com.korruptengu.gymcheckinsystem.dto.response.TrainTeacherResponse;
-import com.korruptengu.gymcheckinsystem.entity.TrainTeacher;
-import com.korruptengu.gymcheckinsystem.mapper.TrainTeacherMapper;
-import com.korruptengu.gymcheckinsystem.service.impl.TrainTeacherService;
+import com.korruptengu.gymcheckinsystem.entity.TrainTeacherId;
+import com.korruptengu.gymcheckinsystem.service.TrainTeacherService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,44 +16,46 @@ import java.util.List;
 
 @RestController
 @RequestMapping(TRAIN_TEACHERS)
+@RequiredArgsConstructor
 public class TrainTeacherController {
-    private final TrainTeacherService trainTeacherService;
-
-    public TrainTeacherController(TrainTeacherService trainTeacherService) {
-        this.trainTeacherService = trainTeacherService;
-    }
+    private final TrainTeacherService service;
 
     @GetMapping
-    public ResponseEntity<List<TrainTeacherResponse>> getAllTrainTeacher(){
-        List<TrainTeacher> allTrainTeacher = trainTeacherService.getAllTrainTeachers();
-        List<TrainTeacherResponse> responseList = allTrainTeacher.stream()
-                .map(TrainTeacherMapper :: toResponse)
-                .toList();
-        return  ResponseEntity.ok(responseList);
+    public ResponseEntity<List<TrainTeacherResponse>> getAllTrainTeachers() {
+        List<TrainTeacherResponse> allResponses = service.getAllTrainTeachers();
+        return ResponseEntity.ok(allResponses);
     }
 
     @GetMapping(TRAIN_TEACHER_ID)
-    public ResponseEntity<TrainTeacherResponse> getTrainTeacherById(@PathVariable Long instructorId, @PathVariable Long studentId){
-        TrainTeacher trainTeacher = trainTeacherService.getTrainTeacherById(instructorId, studentId);
-        return ResponseEntity
-                .ok(TrainTeacherMapper.toResponse(trainTeacher));
+    public ResponseEntity<TrainTeacherResponse> getTrainTeacherById(
+            @PathVariable Long instructorId,
+            @PathVariable Long studentId) {
+
+        TrainTeacherId id = toId(instructorId, studentId);
+        TrainTeacherResponse response = service.getTrainTeacherById(id);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<TrainTeacherResponse>  createTrainTeacher(@RequestBody PutTrainTeacherRequest request){
-        TrainTeacher createdTrainTeacher = trainTeacherService.createTrainTeacher(request.instructorId(), request.studentId());
-        URI location = URI.create(TRAIN_TEACHERS + "/"
-                + createdTrainTeacher.getInstructor().getId() + "/"
-                + createdTrainTeacher.getStudent().getId());
-        return ResponseEntity
-                .created(location)
-                .body(TrainTeacherMapper.toResponse(createdTrainTeacher));
+    public ResponseEntity<TrainTeacherResponse> createTrainTeacher(
+            @Valid @RequestBody PostTrainTeacherRequest request) {
+
+        TrainTeacherResponse response = service.createTrainTeacher(request);
+        URI location = URI.create(TRAIN_TEACHERS + "/" + response.instructorId() + "/" + response.studentId());
+        return ResponseEntity.created(location).body(response);
     }
 
     @DeleteMapping(TRAIN_TEACHER_ID)
-    public ResponseEntity<TrainTeacherResponse> deleteTrainTeacher(@PathVariable Long instructorId, @PathVariable Long studentId){
-        TrainTeacher deletedTrainTeacher = trainTeacherService.deleteTrainTeacher(instructorId, studentId);
-        return ResponseEntity
-                .ok(TrainTeacherMapper.toResponse(deletedTrainTeacher));
+    public ResponseEntity<TrainTeacherResponse> deleteTrainTeacher(
+            @PathVariable Long instructorId,
+            @PathVariable Long studentId) {
+
+        TrainTeacherId id = toId(instructorId, studentId);
+        TrainTeacherResponse response = service.deleteTrainTeacherById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    private TrainTeacherId toId(Long instructorId, Long studentId) {
+        return new TrainTeacherId(instructorId, studentId);
     }
 }

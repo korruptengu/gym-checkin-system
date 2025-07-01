@@ -38,6 +38,6 @@ public class CourseSession {
 
 
     public LocalDateTime getEndTime(){
-        return startTime.plusMinutes((int) + durationInMinutes);
+        return startTime.plusMinutes(this.durationInMinutes);
     }
 }

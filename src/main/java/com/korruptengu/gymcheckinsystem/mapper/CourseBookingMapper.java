@@ -50,5 +50,4 @@ public interface CourseBookingMapper {
     default CourseBookingId patchRequestToCourseBookingId(PatchCourseBookingRequest request){
         return new CourseBookingId(request.memberId(), request.courseSessionId());
     }
-
 }

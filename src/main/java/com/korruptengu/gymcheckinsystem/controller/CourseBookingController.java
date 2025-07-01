@@ -8,7 +8,7 @@ import com.korruptengu.gymcheckinsystem.dto.response.CourseBookingResponse;
 import com.korruptengu.gymcheckinsystem.entity.CourseBookingId;
 import com.korruptengu.gymcheckinsystem.service.CourseBookingService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +17,7 @@ import java.util.List;
 
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping(COURSE_BOOKINGS)
 public class CourseBookingController {
     private final CourseBookingService service;
