@@ -1,6 +1,8 @@
 # Gym Check-in System 🏋️‍♂️
 
-Ein System zur Verwaltung von Mitgliedern, Trainern, Kursen und individuellen Trainingseinheiten in einem Fitnessstudio – entwickelt mit Spring Boot (Backend) – mit geplantem React (Frontend).
+Ein webbasiertes System zur Verwaltung von Mitgliedern, Trainern, Kursen und individuellen Trainingseinheiten in einem Fitnessstudio.  
+Das Backend basiert auf Spring Boot.  
+Ein React-Frontend ist geplant, um das System perspektivisch als Full-Stack-Anwendung zu erweitern.
 
 ---
 
@@ -24,18 +26,19 @@ Ein System zur Verwaltung von Mitgliedern, Trainern, Kursen und individuellen Tr
 - Lombok
 - Bean Validation (`javax.validation`)
 - Exception Handling mit `@ControllerAdvice`
+- JUnit 5 & Mockito (für Unit-Tests)
 
 ---
 
 ## 📁 Features
 
-- CRUD für Mitglieder, Trainer und TrainingSessions
+- CRUD für alle zentralen Entitäten: `Member`, `Trainer`, `TrainingSession`, `CourseType`, `CourseSession`, `CourseBooking`, `CheckIn`, `TrainTrainer`
 - Eingabeverifizierung mit `@Valid`, `@NotNull` etc.
 - Globale Fehlerbehandlung mit sprechenden HTTP-Statuscodes
 - Trennung von Entities, DTOs, Services, Mappers und Controllern
 - Unterstützung für 1:1 Personal Trainings mit Zeit und Dauer
-- Kursmanagement (CourseType, Session, Booking) [in Arbeit]
-- Trainerausbildung: Trainer können andere Trainer ausbilden (`TrainTrainer`)
+- Kursmanagement mit CourseType, CourseSession und CourseBooking
+- `TrainTrainer`: Modelliert das Verhältnis zwischen Ausbildern und auszubildenden Trainern (1:n-Beziehung)
 - PATCH- und PUT-Unterstützung für Teil-/Vollupdates
 - Dateninitialisierung für Entwicklungszwecke
 
@@ -52,20 +55,21 @@ Ein System zur Verwaltung von Mitgliedern, Trainern, Kursen und individuellen Tr
 
 ---
 
-## 🚦 Status
-
-Das Backend befindet sich in aktiver Entwicklung.  
-Folgende Funktionen sind bereits umgesetzt:
+## 🛠 Projektstatus
 
 - [x] Member-API (CRUD, Validierung, Fehlerhandling)
 - [x] Trainer-API (CRUD, Validierung, Fehlerhandling)
 - [x] TrainingSession-API (inkl. PATCH/PUT mit UpdateHelper)
 - [x] TrainTrainer-Entität und Struktur
-- [ ] CRUD für TrainTrainer
-- [ ] CourseType-, CourseSession-, CourseBooking, TrainTrainer-API
+- [x] CRUD für TrainTrainer
+- [x] CRUD für CourseType, CourseSession, CourseBooking
+- [ ] Teilnehmer-API pro Kurs-Session (inkl. Buchungsstatus)
 - [ ] Spezialisierte GET-Endpunkte (z. B. Teilnehmer eines Kurses)
-- [ ] Unit-Tests für Service-Schicht
-- [ ] React-Frontend (in Planung)
+- [x] Unit-Tests für Service-Schicht (**Angefangen**)
+- [ ] Swagger/OpenAPI-Dokumentation
+- [ ] Authentifizierung mit Spring Security (optional)
+- [ ] Pagination & Filterung für Listen
+- [ ] Frontend mit React + TypeScript (in Planung)
 
 ---
 
@@ -91,34 +95,28 @@ cd gym-checkin-system
 
 ## 🔌 Beispiel-Endpunkte
 
+#### Member
 - `GET /api/members`
-- `POST /api/trainers`
+- `POST /api/members`
+- `PATCH /api/members/{id}`
+
+#### Trainer
+- `GET /api/trainers`
+- `GET /api/trainers/{id}/trainees` *(geplant)*
+
+#### TrainingSession
+- `POST /api/training-sessions`
 - `PATCH /api/training-sessions/{id}`
-- `GET /api/trainers/{id}/trainees` *(geplant für TrainTrainer)*
-- `GET /api/course-sessions/{id}/participants` *(geplant: Teilnehmerliste mit Status)*
 
-### Fehlerbehandlung (HTTP-Statuscodes)
-
-- `400 Bad Request` – Ungültige Eingabe
-- `404 Not Found` – Ressource nicht gefunden
-- `409 Conflict` – Konflikt (z. B. doppelte E-Mail)
+#### CourseSession
+- `GET /api/course-sessions/{id}/participants` *(geplant)*
 
 ---
 
 ## 👨‍💻 Autor
 
-**Roy**  
-2025 – Projekt zur praktischen Anwendung von Spring Boot und React
-Lizenz: MIT *(optional anpassbar)*
+**Roy Wellner**  
+2025 – Eigenständiges Lern- und Praxisprojekt im Bereich Java-Backend-Entwicklung
 
----
-
-## 📎 Technische To-Do-Liste
-
-- [ ] CRUD für verbleibende Entitäten (`CourseType`, `CourseSession`, `CourseBooking`, `TrainTrainer`)
-- [ ] Teilnehmer-API pro Kurs-Session (inkl. Buchungsstatus)
-- [ ] Swagger/OpenAPI-Dokumentation
-- [ ] Authentifizierung mit Spring Security (optional)
-- [ ] Pagination & Filterung für Listen
-- [ ] Unit-Tests für Services
-- [ ] Frontend mit React + TypeScript
+## 📄 Lizenz
+MIT License
