@@ -21,14 +21,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CourseSessionServiceImpl implements CourseSessionService {
-    private final CourseSessionRepository courseSessionRepository;
+    private final CourseSessionRepository repository;
     private final CourseSessionMapper mapper;
     private final EntityFetcher fetcher;
     private final TrainerAvailabilityValidator validator;
 
     @Override
     public List<CourseSessionResponse> getAllCourseSessions() {
-        List<CourseSession> allSessions = courseSessionRepository.findAll();
+        List<CourseSession> allSessions = repository.findAll();
         List<CourseSessionResponse> responseList = new ArrayList<>();
         for (CourseSession session : allSessions) {
             responseList.add(mapper.toResponse(session));
@@ -56,14 +56,14 @@ public class CourseSessionServiceImpl implements CourseSessionService {
                     created.getStartTime(),
                     created.getEndTime());
         }
-        courseSessionRepository.save(created);
+        repository.save(created);
         return mapper.toResponse(created);
     }
 
     @Override
     public CourseSessionResponse deleteCourseSessionById(Long id) {
         CourseSession session = fetcher.fetchCourseSession(id);
-        courseSessionRepository.delete(session);
+        repository.delete(session);
         return mapper.toResponse(session);
     }
 
@@ -88,7 +88,7 @@ public class CourseSessionServiceImpl implements CourseSessionService {
         }
 
         CourseSessionUpdateHelper.updateCompletely(existing, updateData);
-        courseSessionRepository.save(existing);
+        repository.save(existing);
 
         return mapper.toResponse(existing);
     }
@@ -122,7 +122,7 @@ public class CourseSessionServiceImpl implements CourseSessionService {
         }
 
         CourseSessionUpdateHelper.updatePartially(existing, merged);
-        courseSessionRepository.save(existing);
+        repository.save(existing);
 
         return mapper.toResponse(existing);
     }
