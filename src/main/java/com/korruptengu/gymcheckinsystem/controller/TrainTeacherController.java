@@ -26,7 +26,7 @@ public class TrainTeacherController {
         return ResponseEntity.ok(allResponses);
     }
 
-    @GetMapping(TRAIN_TEACHER_ID)
+    @GetMapping(TRAIN_TEACHER_COMPOSITE_ID)
     public ResponseEntity<TrainTeacherResponse> getTrainTeacherById(
             @PathVariable Long instructorId,
             @PathVariable Long studentId) {
@@ -45,7 +45,7 @@ public class TrainTeacherController {
         return ResponseEntity.created(location).body(response);
     }
 
-    @DeleteMapping(TRAIN_TEACHER_ID)
+    @DeleteMapping(TRAIN_TEACHER_COMPOSITE_ID)
     public ResponseEntity<TrainTeacherResponse> deleteTrainTeacher(
             @PathVariable Long instructorId,
             @PathVariable Long studentId) {

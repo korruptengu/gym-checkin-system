@@ -28,7 +28,7 @@ public class CourseBookingController {
         return ResponseEntity.ok(allResponse);
     }
 
-    @GetMapping(COURSE_BOOKING_ID)
+    @GetMapping(COURSE_BOOKING_COMPOSITE_ID)
     public ResponseEntity<CourseBookingResponse> getCourseBookingById(@PathVariable Long memberId, @PathVariable Long courseSessionId){
         CourseBookingId id = toId(memberId, courseSessionId);
         CourseBookingResponse response = service.getCourseBookingById(id);
@@ -43,14 +43,14 @@ public class CourseBookingController {
 
     }
 
-    @DeleteMapping(COURSE_BOOKING_ID)
+    @DeleteMapping(COURSE_BOOKING_COMPOSITE_ID)
     public ResponseEntity<CourseBookingResponse> deleteCourseBooking(@PathVariable Long memberId, @PathVariable Long courseSessionId){
         CourseBookingId id = toId(memberId, courseSessionId);
         CourseBookingResponse response = service.deleteCourseBookingById(id);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping(COURSE_BOOKING_ID)
+    @PutMapping(COURSE_BOOKING_COMPOSITE_ID)
     public ResponseEntity<CourseBookingResponse> updateCourseBooking (
             @PathVariable Long memberId,
             @PathVariable Long courseSessionId,
@@ -61,7 +61,7 @@ public class CourseBookingController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping(COURSE_BOOKING_ID)
+    @PatchMapping(COURSE_BOOKING_COMPOSITE_ID)
     public ResponseEntity<CourseBookingResponse> partiallyUpdateCourseBooking(
             @PathVariable Long memberId,
             @PathVariable Long courseSessionId,
