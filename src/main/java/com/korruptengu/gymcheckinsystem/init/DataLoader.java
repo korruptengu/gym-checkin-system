@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,20 @@ public class DataLoader implements CommandLineRunner {
         Member member2 = new Member("Clara", "Lustermann", "clara.lustermann@test.com");
         memberRepository.save(member1);
         memberRepository.save(member2);
+
+        memberRepository.saveAll(List.of(
+                new Member("Clara", "Lustermann", "clara.lustermann@test.com"),
+                new Member("Jonas", "Klein", "jonas.klein@test.com"),
+                new Member("Miriam", "Weber", "miriam.weber@test.com"),
+                new Member("Felix", "Mayer", "felix.mayer@test.com"),
+                new Member("Lena", "Schmidt", "lena.schmidt@test.com"),
+                new Member("Tobias", "Richter", "tobias.richter@test.com"),
+                new Member("Sophie", "Baumann", "sophie.baumann@test.com"),
+                new Member("Leon", "Neumann", "leon.neumann@test.com"),
+                new Member("Hannah", "Vogel", "hannah.vogel@test.com"),
+                new Member("Nico", "Fischer", "nico.fischer@test.com"),
+                new Member("Laura", "Krämer", "laura.kraemer@test.com")
+        ));
 
         Trainer trainer1 = new Trainer("Gustaf", "Gustafen", LocalDate.now());
         Trainer trainer2 = new Trainer("Carl", "Karlson", LocalDate.of(2024,8,1));
