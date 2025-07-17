@@ -12,6 +12,7 @@ import com.korruptengu.gymcheckinsystem.mapper.CheckInMapper;
 import com.korruptengu.gymcheckinsystem.repository.CheckInRepository;
 import com.korruptengu.gymcheckinsystem.repository.MemberRepository;
 import com.korruptengu.gymcheckinsystem.service.CheckInService;
+import com.korruptengu.gymcheckinsystem.service.fetcher.EntityFetcher;
 import com.korruptengu.gymcheckinsystem.service.helper.update.CheckInUpdateHelper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,8 @@ import java.util.List;
 @AllArgsConstructor
 public class CheckInServiceImpl implements CheckInService {
     private final CheckInRepository checkInRepository;
-    private final MemberRepository memberRepository;
     private final CheckInMapper mapper;
+    private final EntityFetcher fetcher;
 
     @Override
     public List<CheckInResponse> getAllCheckIns(){
@@ -38,8 +39,7 @@ public class CheckInServiceImpl implements CheckInService {
 
     @Override
     public CheckInResponse getCheckInById(Long id){
-        CheckIn checkIn = checkInRepository.findById(id)
-                .orElseThrow(() -> new CheckInNotFoundException(id));
+        CheckIn checkIn = fetcher.fetchCheckIn(id);
         return mapper.toResponse(checkIn);
     }
 
@@ -47,15 +47,14 @@ public class CheckInServiceImpl implements CheckInService {
     public CheckInResponse createCheckIn(PostCheckInRequest request){
         if(request == null) throw new IllegalArgumentException("New data must not be null");
         CheckIn created = mapper.postRequestToEntity(request);
-        created.setMember(fetchMember(request.memberId()));
+        created.setMember(fetcher.fetchMember(request.memberId()));
         checkInRepository.save(created);
         return mapper.toResponse(created);
     }
 
     @Override
     public CheckInResponse deleteCheckInById(Long id){
-        CheckIn checkIn = checkInRepository.findById(id)
-                .orElseThrow(() -> new CheckInNotFoundException(id));
+        CheckIn checkIn = fetcher.fetchCheckIn(id);
         checkInRepository.delete(checkIn);
         return mapper.toResponse(checkIn);
     }
@@ -64,10 +63,8 @@ public class CheckInServiceImpl implements CheckInService {
     public CheckInResponse updateCheckInCompletely(Long id, PutCheckInRequest request){
         if (request == null) throw new IllegalArgumentException("Update data must be not null");
 
-        CheckIn existing = checkInRepository.findById(id)
-                .orElseThrow(() -> new CheckInNotFoundException(id));
-
-        Member member = fetchMember(request.memberId());
+        CheckIn existing = fetcher.fetchCheckIn(id);
+        Member member = fetcher.fetchMember(request.memberId());
         CheckIn updateData = mapper.putRequestToEntity(request);
         updateData.setMember(member);
 
@@ -81,11 +78,10 @@ public class CheckInServiceImpl implements CheckInService {
     public CheckInResponse updateCheckInPartially(Long id, PatchCheckInRequest request){
         if (request == null) throw new IllegalArgumentException("Update data must be not null");
 
-        CheckIn existing = checkInRepository.findById(id)
-                .orElseThrow(() -> new CheckInNotFoundException(id));
+        CheckIn existing = fetcher.fetchCheckIn(id);
 
         Member member = request.memberId() != null
-                ? fetchMember(request.memberId())
+                ? fetcher.fetchMember(request.memberId())
                 : null;
 
         CheckIn updateData = mapper.patchRequestToEntity(request);
@@ -98,11 +94,5 @@ public class CheckInServiceImpl implements CheckInService {
 
         return mapper.toResponse(existing);
 
-    }
-
-    // --- Private helper methods ---
-    private Member fetchMember(Long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(() -> new CheckInNotFoundException(id));
     }
 }

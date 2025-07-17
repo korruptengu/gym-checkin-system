@@ -10,6 +10,7 @@ import com.korruptengu.gymcheckinsystem.exception.TrainerNotFoundException;
 import com.korruptengu.gymcheckinsystem.mapper.TrainerMapper;
 import com.korruptengu.gymcheckinsystem.repository.TrainerRepository;
 import com.korruptengu.gymcheckinsystem.service.TrainerService;
+import com.korruptengu.gymcheckinsystem.service.fetcher.EntityFetcher;
 import com.korruptengu.gymcheckinsystem.service.helper.update.TrainerUpdateHelper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,12 @@ import java.util.List;
 public class TrainerServiceImpl implements TrainerService {
     private final TrainerRepository repository;
     private final TrainerMapper mapper;
+    private final EntityFetcher fetcher;
 
     @Override
     public List<TrainerResponse> getAllTrainers(){
         List<Trainer> allTrainers = repository.findAll();
-        List<TrainerResponse> responseList = new ArrayList<TrainerResponse>();
+        List<TrainerResponse> responseList = new ArrayList<>();
         for(Trainer trainer : allTrainers){
             responseList.add(mapper.toResponse(trainer));
         }
@@ -35,8 +37,7 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public TrainerResponse getTrainerById(Long id){
-        return mapper.toResponse(repository.findById(id)
-                .orElseThrow(() -> new TrainerNotFoundException(id)));
+        return mapper.toResponse(fetcher.fetchTrainer(id));
     }
 
     @Override
@@ -47,8 +48,7 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public TrainerResponse deleteTrainerById(Long id){
-        Trainer deleted = repository.findById(id)
-                .orElseThrow(() -> new TrainerNotFoundException(id));
+        Trainer deleted = fetcher.fetchTrainer(id);
         repository.delete(deleted);
         return mapper.toResponse(deleted);
     }
@@ -56,8 +56,7 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public TrainerResponse updateTrainerCompletely(Long id, PutTrainerRequest request){
         if (request == null) throw new IllegalArgumentException("Update data must not be null");
-        Trainer existing = repository.findById(id)
-                .orElseThrow(() -> new TrainerNotFoundException(id));
+        Trainer existing = fetcher.fetchTrainer(id);
         TrainerUpdateHelper.updateCompletely(existing, mapper.putRequestToEntity(request));
         return mapper.toResponse(repository.save(existing));
     }
@@ -67,8 +66,7 @@ public class TrainerServiceImpl implements TrainerService {
         if (request == null) throw new IllegalArgumentException("Update data must not be null");
         Trainer updateData = mapper.patchRequestToEntity(request);
         if (TrainerUpdateHelper.isAllFieldsNull(updateData)) throw new EmptyUpdateDataException();
-        Trainer existing = repository.findById(id)
-                .orElseThrow(() -> new TrainerNotFoundException(id));
+        Trainer existing = fetcher.fetchTrainer(id);
         TrainerUpdateHelper.updatePartially(existing, updateData);
         return mapper.toResponse(repository.save(existing));
     }

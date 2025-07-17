@@ -5,11 +5,11 @@ import com.korruptengu.gymcheckinsystem.dto.request.courseType.PostCourseTypeReq
 import com.korruptengu.gymcheckinsystem.dto.request.courseType.PutCourseTypeRequest;
 import com.korruptengu.gymcheckinsystem.dto.response.CourseTypeResponse;
 import com.korruptengu.gymcheckinsystem.entity.CourseType;
-import com.korruptengu.gymcheckinsystem.exception.CourseTypeNotFoundException;
 import com.korruptengu.gymcheckinsystem.exception.EmptyUpdateDataException;
 import com.korruptengu.gymcheckinsystem.mapper.CourseTypeMapper;
 import com.korruptengu.gymcheckinsystem.repository.CourseTypeRepository;
 import com.korruptengu.gymcheckinsystem.service.CourseTypeService;
+import com.korruptengu.gymcheckinsystem.service.fetcher.EntityFetcher;
 import com.korruptengu.gymcheckinsystem.service.helper.update.CourseTypeUpdateHelper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,7 @@ import java.util.List;
 public class CourseTypeServiceImpl implements CourseTypeService {
     private final CourseTypeRepository repository;
     private final CourseTypeMapper mapper;
+    private final EntityFetcher fetcher;
 
     @Override
     public List<CourseTypeResponse> getAllCourseTypes() {
@@ -35,8 +36,7 @@ public class CourseTypeServiceImpl implements CourseTypeService {
 
     @Override
     public CourseTypeResponse getCourseTypeById(Long id){
-        CourseType courseType = repository.findById(id)
-                .orElseThrow(() -> new CourseTypeNotFoundException(id));
+        CourseType courseType = fetcher.fetchCourseType(id);
         return mapper.toResponse(courseType);
     }
 
@@ -48,8 +48,7 @@ public class CourseTypeServiceImpl implements CourseTypeService {
 
     @Override
     public CourseTypeResponse deleteCourseTypeById(Long id){
-        CourseType deleted = repository.findById(id)
-                .orElseThrow(() -> new CourseTypeNotFoundException(id));
+        CourseType deleted = fetcher.fetchCourseType(id);
         repository.delete(deleted);
         return mapper.toResponse(deleted);
     }
@@ -57,8 +56,7 @@ public class CourseTypeServiceImpl implements CourseTypeService {
     @Override
     public CourseTypeResponse updateCourseTypeCompletely(Long id, PutCourseTypeRequest request) {
         if (request == null) throw new IllegalArgumentException("Update data must not be null");
-        CourseType existing = repository.findById(id)
-                .orElseThrow(() -> new CourseTypeNotFoundException(id));
+        CourseType existing = fetcher.fetchCourseType(id);
         CourseTypeUpdateHelper.updateCompletely(existing, mapper.putRequestToEntity(request));
         return mapper.toResponse(repository.save(existing));
     }
@@ -68,8 +66,7 @@ public class CourseTypeServiceImpl implements CourseTypeService {
         if (request == null) throw new IllegalArgumentException("Update data must not be null");
         CourseType updateData = mapper.patchRequestToEntity(request);
         if (CourseTypeUpdateHelper.isAllFieldsNull(updateData)) throw new EmptyUpdateDataException();
-        CourseType existing = repository.findById(id)
-                .orElseThrow(() -> new CourseTypeNotFoundException(id));
+        CourseType existing = fetcher.fetchCourseType(id);
         CourseTypeUpdateHelper.updatePartially(existing, updateData);
         return mapper.toResponse(repository.save(existing));
     }

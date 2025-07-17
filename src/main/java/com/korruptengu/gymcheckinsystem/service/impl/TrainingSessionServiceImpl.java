@@ -7,8 +7,6 @@ import com.korruptengu.gymcheckinsystem.entity.Trainer;
 import com.korruptengu.gymcheckinsystem.entity.TrainingSession;
 import com.korruptengu.gymcheckinsystem.exception.EmptyUpdateDataException;
 import com.korruptengu.gymcheckinsystem.mapper.TrainingSessionMapper;
-import com.korruptengu.gymcheckinsystem.repository.MemberRepository;
-import com.korruptengu.gymcheckinsystem.repository.TrainerRepository;
 import com.korruptengu.gymcheckinsystem.repository.TrainingSessionRepository;
 import com.korruptengu.gymcheckinsystem.service.TrainingSessionService;
 import com.korruptengu.gymcheckinsystem.service.fetcher.EntityFetcher;
@@ -23,8 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TrainingSessionServiceImpl implements TrainingSessionService {
     private final TrainingSessionRepository trainingSessionRepository;
-    private final MemberRepository memberRepository;
-    private final TrainerRepository trainerRepository;
     private final TrainingSessionMapper mapper;
     private final EntityFetcher fetcher;
 

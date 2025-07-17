@@ -24,8 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseBookingServiceImpl implements CourseBookingService {
     private final CourseBookingRepository courseBookingRepository;
-    private final MemberRepository memberRepository;
-    private final CourseSessionRepository courseSessionRepository;
     private final CourseBookingMapper mapper;
     private final EntityFetcher fetcher;
 
