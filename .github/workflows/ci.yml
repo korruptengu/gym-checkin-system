@@ -1,0 +1,25 @@
+name: Java CI mit Maven
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Repository laden
+      uses: actions/checkout@v3
+
+    - name: JDK-Setup für Maven-Build
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+
+    - name: Maven-Build & Tests
+      run: mvn clean verify
