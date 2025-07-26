@@ -7,10 +7,10 @@ import com.korruptengu.gymcheckinsystem.exception.IllegalPutRequestException;
 public class RequestValidator {
     public static void requireNonNull(Object request, String requestName, String entityName) {
         if (request == null) {
-            if ("post".equalsIgnoreCase(requestName)) throw new IllegalPutRequestException(entityName);
-            if ("put".equalsIgnoreCase(requestName)) throw new IllegalPostRequestException(entityName);
-            if ("patch".equalsIgnoreCase(requestName))  throw new IllegalPatchRequestException(entityName);
+            if ("post".equalsIgnoreCase(requestName)) throw new IllegalPostRequestException(entityName);
+            else if ("put".equalsIgnoreCase(requestName)) throw new IllegalPutRequestException(entityName);
+            else if ("patch".equalsIgnoreCase(requestName)) throw new IllegalPatchRequestException(entityName);
+            else throw new IllegalArgumentException("Nicht unterstützter Request-Typ: " + requestName);
         }
-        throw new IllegalArgumentException("Nicht unterstützter Request-Typ: " + requestName);
     }
 }
