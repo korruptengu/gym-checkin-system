@@ -1,17 +1,17 @@
 package com.korruptengu.gymcheckinsystem.service.impl;
 
-import com.korruptengu.gymcheckinsystem.dto.request.trainer.PatchTrainerRequest;
-import com.korruptengu.gymcheckinsystem.dto.request.trainer.PostTrainerRequest;
-import com.korruptengu.gymcheckinsystem.dto.request.trainer.PutTrainerRequest;
+import com.korruptengu.gymcheckinsystem.dto.request.trainer.*;
 import com.korruptengu.gymcheckinsystem.dto.response.TrainerResponse;
+import com.korruptengu.gymcheckinsystem.entity.AppUser;
 import com.korruptengu.gymcheckinsystem.entity.Trainer;
 import com.korruptengu.gymcheckinsystem.exception.EmptyUpdateDataException;
-import com.korruptengu.gymcheckinsystem.exception.TrainerNotFoundException;
 import com.korruptengu.gymcheckinsystem.mapper.TrainerMapper;
 import com.korruptengu.gymcheckinsystem.repository.TrainerRepository;
 import com.korruptengu.gymcheckinsystem.service.TrainerService;
 import com.korruptengu.gymcheckinsystem.service.fetcher.EntityFetcher;
 import com.korruptengu.gymcheckinsystem.service.helper.update.TrainerUpdateHelper;
+import com.korruptengu.gymcheckinsystem.utils.RequestValidator;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class TrainerServiceImpl implements TrainerService {
     private final TrainerRepository repository;
@@ -42,32 +43,51 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public TrainerResponse createTrainer(PostTrainerRequest request){
-        if (request == null) throw new IllegalArgumentException("New data must not be null");
-        return mapper.toResponse(repository.save(mapper.postRequestToEntity(request)));
+        RequestValidator.requireNonNull(request, "post", "trainer");
+
+        AppUser appUser = fetcher.fetchAppUser(request.appUserId());
+        if (appUser.getMember() != null) throw new IllegalStateException("Der AppUser ist bereits ein Member und kann nicht gleichzeitig ein Trainer sein.");
+        if (appUser.getTrainer() != null) throw new IllegalStateException("Dieser AppUser ist bereits Trainer.");
+
+        Trainer trainer = mapper.postRequestToEntity(request);
+        trainer.setAppUser(appUser);
+
+        Trainer created = repository.save(trainer);
+        appUser.setTrainer(created);  // bidirektionale Konsistenz
+
+        return mapper.toResponse(created);
     }
 
     @Override
     public TrainerResponse deleteTrainerById(Long id){
         Trainer deleted = fetcher.fetchTrainer(id);
+        AppUser user = deleted.getAppUser();
+        user.setTrainer(null);
+        deleted.setAppUser(null);
+
         repository.delete(deleted);
         return mapper.toResponse(deleted);
     }
 
     @Override
     public TrainerResponse updateTrainerCompletely(Long id, PutTrainerRequest request){
-        if (request == null) throw new IllegalArgumentException("Update data must not be null");
+        RequestValidator.requireNonNull(request, "put", "trainer");
         Trainer existing = fetcher.fetchTrainer(id);
+
         TrainerUpdateHelper.updateCompletely(existing, mapper.putRequestToEntity(request));
+
         return mapper.toResponse(repository.save(existing));
     }
 
     @Override
     public TrainerResponse updateTrainerPartially(Long id, PatchTrainerRequest request){
-        if (request == null) throw new IllegalArgumentException("Update data must not be null");
+        RequestValidator.requireNonNull(request, "patch", "trainer");
         Trainer updateData = mapper.patchRequestToEntity(request);
+
         if (TrainerUpdateHelper.isAllFieldsNull(updateData)) throw new EmptyUpdateDataException();
         Trainer existing = fetcher.fetchTrainer(id);
         TrainerUpdateHelper.updatePartially(existing, updateData);
+
         return mapper.toResponse(repository.save(existing));
     }
 

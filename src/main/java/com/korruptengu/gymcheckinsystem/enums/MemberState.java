@@ -1,4 +1,4 @@
-package com.korruptengu.gymcheckinsystem.entity;
+package com.korruptengu.gymcheckinsystem.enums;
 
 public enum MemberState {
     ACTIVE,

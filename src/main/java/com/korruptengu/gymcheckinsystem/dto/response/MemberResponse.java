@@ -1,11 +1,12 @@
 package com.korruptengu.gymcheckinsystem.dto.response;
 
-import com.korruptengu.gymcheckinsystem.entity.MemberState;
+import com.korruptengu.gymcheckinsystem.enums.MemberState;
+
+import java.time.LocalDate;
 
 public record MemberResponse(
         Long id,
-        String firstname,
-        String lastname,
-        String email,
-        MemberState state
+        LocalDate joinDate,
+        MemberState state,
+        Long appUserId
 ) {}

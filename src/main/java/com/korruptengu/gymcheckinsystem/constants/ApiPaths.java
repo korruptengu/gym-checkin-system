@@ -2,6 +2,7 @@ package com.korruptengu.gymcheckinsystem.constants;
 
 public class ApiPaths {
     public static final String ID = "/{id}";
+    public static final String APPUSERS = "/api/appusers";
     public static final String MEMBERS = "/api/members";
     public static final String TRAINERS = "/api/trainers";
     public static final String COURSE_TYPES = "/api/courseTypes";

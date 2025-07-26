@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class EntityFetcher {
 
+    private final AppUserRepository appUserRepository;
     private final CheckInRepository checkInRepository;
     private final CourseSessionRepository courseSessionRepository;
     private final CourseBookingRepository courseBookingRepository;
@@ -18,6 +19,12 @@ public class EntityFetcher {
     private final TrainerRepository trainerRepository;
     private final TrainingSessionRepository trainingSessionRepository;
     private final TrainTeacherRepository trainTeacherRepository;
+
+
+    public AppUser fetchAppUser(Long id) {
+        return appUserRepository.findById(id)
+                .orElseThrow(() -> new AppUserNotFoundException(id));
+    }
 
     public CheckIn fetchCheckIn(Long id) {
         return checkInRepository.findById(id)

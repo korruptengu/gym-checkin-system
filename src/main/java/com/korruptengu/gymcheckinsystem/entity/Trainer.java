@@ -1,5 +1,6 @@
 package com.korruptengu.gymcheckinsystem.entity;
 
+import com.korruptengu.gymcheckinsystem.enums.TrainerState;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -18,13 +19,6 @@ public class Trainer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    @NotBlank(message = "Firstname is required")
-    private String firstname;
-
-    @Column(nullable = false)
-    private String lastname;
-
     @ElementCollection
     @CollectionTable(name = "trainer_specialties", joinColumns = @JoinColumn(name = "trainer_id"))
     @Column(name = "specialty", nullable = true)
@@ -36,20 +30,19 @@ public class Trainer {
     @Column(nullable = false)
     private TrainerState state = TrainerState.NORMAL;
 
+    @OneToOne(optional = false)
+    @JoinColumn(name = "app_user_id", unique = true)
+    private AppUser appUser;
 
     // Konstruktor für Pflichtfelder ohne Spezialisierungen
-    public Trainer(String firstname, String lastname, LocalDate hireDate){
-        if (firstname == null || firstname.isBlank()) throw new IllegalArgumentException("Firstname must not be null or blank");
-        if (lastname == null || lastname.isBlank()) throw new IllegalArgumentException("Lastname must not be null or blank");
+    public Trainer(LocalDate hireDate){
         if (hireDate == null) throw new IllegalArgumentException("HireDate must not be null");
-        this.firstname = firstname.trim().replaceAll("\\s{2,}", " ");
-        this.lastname = lastname.trim().replaceAll("\\s{2,}", " ");
         this.hireDate = hireDate;
     }
 
     // Konstruktor inkl. Spezialisierungen
-    public Trainer(String firstname, String lastname, LocalDate hireDate, List<String> specialtyList){
-        this(firstname, lastname, hireDate);
+    public Trainer(LocalDate hireDate, List<String> specialtyList){
+        this(hireDate);
         if (specialtyList != null){
             this.specialty.addAll(
                     specialtyList.stream()
@@ -62,7 +55,7 @@ public class Trainer {
 
     // Konstruktor inkl. Spezialisierungen und Zustand
     public Trainer(String firstname, String lastname, LocalDate hireDate, List<String> specialtyList, TrainerState state){
-        this(firstname, lastname, hireDate, specialtyList);
+        this(hireDate, specialtyList);
         this.state = (state != null) ? state : TrainerState.NORMAL;
     }
 }

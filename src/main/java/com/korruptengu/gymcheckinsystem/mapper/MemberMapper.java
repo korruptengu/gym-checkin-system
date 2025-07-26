@@ -10,14 +10,19 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface MemberMapper {
+
+    @Mapping(source = "appUser.id", target = "appUserId")
     MemberResponse toResponse(Member member);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "appUser", ignore = true)
     Member putRequestToEntity(PutMemberRequest request);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "appUser", ignore = true)
     Member postRequestToEntity(PostMemberRequest request);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "appUser", ignore = true)
     Member patchRequestToEntity(PatchMemberRequest request);
 }

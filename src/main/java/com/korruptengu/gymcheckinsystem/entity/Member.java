@@ -1,44 +1,29 @@
 package com.korruptengu.gymcheckinsystem.entity;
+import com.korruptengu.gymcheckinsystem.enums.MemberState;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String firstname;
-    @Column(nullable = false)
-    private String lastname;
-    @Column(nullable = false)
-    private String email;
+    private LocalDate joinDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberState state = MemberState.ACTIVE;
 
-
-    public Member(String firstname, String lastname, String eMail) {
-        if (firstname == null || firstname.isBlank()) throw new IllegalArgumentException("Firstname must not be null or blank");
-        if (lastname == null || lastname.isBlank()) throw new IllegalArgumentException("Lastname must not be null or blank");
-        this.firstname = firstname.trim().replaceAll("\\s{2,}", " ");
-        this.lastname = lastname.trim().replaceAll("\\s{2,}", " ");
-        this.email = eMail.trim().replaceAll("\\s{2,}", " ");
-    }
-
-    public Member(String firstname, String lastname, String eMail, MemberState state) {
-        if (firstname == null || firstname.isBlank()) throw new IllegalArgumentException("Firstname must not be null or blank");
-        if (lastname == null || lastname.isBlank()) throw new IllegalArgumentException("Lastname must not be null or blank");
-        if (state == null) throw new NullPointerException("state must not be null");
-        this.firstname = firstname.trim().replaceAll("\\s{2,}", " ");
-        this.lastname = lastname.trim().replaceAll("\\s{2,}", " ");
-        this.email = eMail.trim().replaceAll("\\s{2,}", " ");
-        this.state = state;
-    }
+    @OneToOne(optional = false)
+    @JoinColumn(name = "app_user_id", unique = true)
+    private AppUser appUser;
 }

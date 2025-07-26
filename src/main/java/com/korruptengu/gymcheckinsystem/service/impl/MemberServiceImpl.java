@@ -1,9 +1,8 @@
 package com.korruptengu.gymcheckinsystem.service.impl;
 
-import com.korruptengu.gymcheckinsystem.dto.request.member.PatchMemberRequest;
-import com.korruptengu.gymcheckinsystem.dto.request.member.PostMemberRequest;
-import com.korruptengu.gymcheckinsystem.dto.request.member.PutMemberRequest;
+import com.korruptengu.gymcheckinsystem.dto.request.member.*;
 import com.korruptengu.gymcheckinsystem.dto.response.MemberResponse;
+import com.korruptengu.gymcheckinsystem.entity.AppUser;
 import com.korruptengu.gymcheckinsystem.entity.Member;
 import com.korruptengu.gymcheckinsystem.exception.EmptyUpdateDataException;
 import com.korruptengu.gymcheckinsystem.mapper.MemberMapper;
@@ -11,6 +10,8 @@ import com.korruptengu.gymcheckinsystem.repository.MemberRepository;
 import com.korruptengu.gymcheckinsystem.service.MemberService;
 import com.korruptengu.gymcheckinsystem.service.fetcher.EntityFetcher;
 import com.korruptengu.gymcheckinsystem.service.helper.update.MemberUpdateHelper;
+import com.korruptengu.gymcheckinsystem.utils.RequestValidator;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.List;
 
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository repository;
@@ -28,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<MemberResponse> getAllMembers(){
         List<Member> allMembers = repository.findAll();
-        List<MemberResponse> responseList = new ArrayList<MemberResponse>();
+        List<MemberResponse> responseList = new ArrayList<>();
         for(Member member : allMembers){
             responseList.add(mapper.toResponse(member));
         }
@@ -43,32 +45,51 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberResponse createMember(PostMemberRequest request){
-        if(request == null) throw new IllegalArgumentException("New data must not be null");
-        return mapper.toResponse(repository.save(mapper.postRequestToEntity(request)));
+        RequestValidator.requireNonNull(request, "post", "member");
+
+        AppUser appUser = fetcher.fetchAppUser(request.appUserId());
+        if (appUser.getTrainer() != null) throw new IllegalStateException("Der AppUser ist bereits ein Trainer und kann nicht gleichzeitig ein Member sein.");
+        if (appUser.getMember() != null) throw new IllegalStateException("Dieser AppUser ist bereits Member.");
+
+        Member member = mapper.postRequestToEntity(request);
+        member.setAppUser(appUser);
+
+        Member created = repository.save(member);
+        appUser.setMember(created); // bidirektionale Konsistenz
+
+        return mapper.toResponse(created);
     }
 
     @Override
     public MemberResponse deleteMemberById(Long id){
-        Member member = fetcher.fetchMember(id);
-        repository.delete(member);
-        return mapper.toResponse(member);
+        Member deleted = fetcher.fetchMember(id);
+        AppUser user = deleted.getAppUser();
+        user.setMember(null);
+        deleted.setAppUser(null);
+
+        repository.delete(deleted);
+        return mapper.toResponse(deleted);
     }
 
     @Override
     public MemberResponse updateMemberCompletely(Long id, PutMemberRequest request){
-        if(request == null) throw new IllegalArgumentException("Update data must not be null");
+        RequestValidator.requireNonNull(request, "put", "member");
         Member existing = fetcher.fetchMember(id);
+
         MemberUpdateHelper.updateCompletely(existing, mapper.putRequestToEntity(request));
+
         return mapper.toResponse(repository.save(existing));
     }
 
     @Override
     public MemberResponse updateMemberPartially(Long id, PatchMemberRequest request){
-        if (request == null) throw new IllegalArgumentException("Update data must not be null");
+        RequestValidator.requireNonNull(request, "patch", "member");
         Member updateData = mapper.patchRequestToEntity(request);
+
         if (MemberUpdateHelper.isAllFieldsNull(updateData)) throw new EmptyUpdateDataException();
         Member existing = fetcher.fetchMember(id);
         MemberUpdateHelper.updatePartially(existing, updateData);
+
         return mapper.toResponse(repository.save(existing));
     }
 }

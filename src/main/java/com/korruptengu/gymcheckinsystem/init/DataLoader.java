@@ -1,9 +1,11 @@
 package com.korruptengu.gymcheckinsystem.init;
 
 import com.korruptengu.gymcheckinsystem.entity.*;
+import com.korruptengu.gymcheckinsystem.enums.UserRole;
 import com.korruptengu.gymcheckinsystem.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -23,35 +25,74 @@ public class DataLoader implements CommandLineRunner {
     private final CheckInRepository checkInRepository;
     private final CourseSessionRepository courseSessionRepository;
     private final CourseTypeRepository courseTypeRepository;
+    private final AppUserRepository appUserRepository;
+    private final PasswordEncoder encoder;
 
     @Override
     public void run(String... args){
 
         logger.info("Start der Dateninitialisierung...");
 
-        Member member1 = new Member("Peter", "Haupt", "pH@test.de");
-        Member member2 = new Member("Clara", "Lustermann", "clara.lustermann@test.com");
-        memberRepository.save(member1);
-        memberRepository.save(member2);
+        // === MEMBER 1 ===
+        AppUser memberUser1 = AppUser.builder()
+                .username("anna.berg")
+                .password(encoder.encode("pass123"))
+                .uRole(UserRole.MEMBER)
+                .firstname("Anna")
+                .lastname("Berg")
+                .email("anna.berg@test.com")
+                .build();
 
-        memberRepository.saveAll(List.of(
-                new Member("Clara", "Lustermann", "clara.lustermann@test.com"),
-                new Member("Jonas", "Klein", "jonas.klein@test.com"),
-                new Member("Miriam", "Weber", "miriam.weber@test.com"),
-                new Member("Felix", "Mayer", "felix.mayer@test.com"),
-                new Member("Lena", "Schmidt", "lena.schmidt@test.com"),
-                new Member("Tobias", "Richter", "tobias.richter@test.com"),
-                new Member("Sophie", "Baumann", "sophie.baumann@test.com"),
-                new Member("Leon", "Neumann", "leon.neumann@test.com"),
-                new Member("Hannah", "Vogel", "hannah.vogel@test.com"),
-                new Member("Nico", "Fischer", "nico.fischer@test.com"),
-                new Member("Laura", "Krämer", "laura.kraemer@test.com")
-        ));
+        Member member1 = new Member();
+        member1.setJoinDate(LocalDate.of(2023, 1, 15));
+        member1.setAppUser(memberUser1);
+        memberUser1.setMember(member1);
 
-        Trainer trainer1 = new Trainer("Gustaf", "Gustafen", LocalDate.now());
-        Trainer trainer2 = new Trainer("Carl", "Karlson", LocalDate.of(2024,8,1));
-        trainerRepository.save(trainer1);
-        trainerRepository.save(trainer2);
+        // === MEMBER 2 ===
+        AppUser memberUser2 = AppUser.builder()
+                .username("lukas.meier")
+                .password(encoder.encode("pass123"))
+                .uRole(UserRole.MEMBER)
+                .firstname("Lukas")
+                .lastname("Meier")
+                .email("lukas.meier@test.com")
+                .build();
+
+        Member member2 = new Member();
+        member2.setJoinDate(LocalDate.of(2023, 3, 5));
+        member2.setAppUser(memberUser2);
+        memberUser2.setMember(member2);
+
+        // === TRAINER 1 ===
+        AppUser trainerUser1 = AppUser.builder()
+                .username("sven.fischer")
+                .password(encoder.encode("pass123"))
+                .uRole(UserRole.TRAINER)
+                .firstname("Sven")
+                .lastname("Fischer")
+                .email("sven.fischer@test.com")
+                .build();
+
+        Trainer trainer1 = new Trainer(LocalDate.of(2022, 10, 1));
+        trainer1.setAppUser(trainerUser1);
+        trainerUser1.setTrainer(trainer1);
+
+        // === TRAINER 2 ===
+        AppUser trainerUser2 = AppUser.builder()
+                .username("nina.schulz")
+                .password(encoder.encode("pass123"))
+                .uRole(UserRole.TRAINER)
+                .firstname("Nina")
+                .lastname("Schulz")
+                .email("nina.schulz@test.com")
+                .build();
+
+        Trainer trainer2 = new Trainer(LocalDate.of(2021, 6, 20));
+        trainer2.setAppUser(trainerUser2);
+        trainerUser2.setTrainer(trainer2);
+
+        // === Speichern ===
+        appUserRepository.saveAll(List.of(memberUser1, memberUser2, trainerUser1, trainerUser2));
 
         CourseType courseType1 = new CourseType("Kraftausdauer Peak", "Kraftausdauer");
         CourseType courseType2 = new CourseType("Hot Yoga", "Yoga", "Erlebe das heiße Yoga Erlebnis.");
@@ -66,5 +107,16 @@ public class DataLoader implements CommandLineRunner {
         checkInRepository.save(checkIn1);
         checkInRepository.save(checkIn2);
 
+
+        // === ADMIN ===
+        AppUser admin = new AppUser();
+        admin.setUsername("admin");
+        admin.setPassword(encoder.encode("admin123"));
+        admin.setFirstname("System");
+        admin.setLastname("Admin");
+        admin.setEmail("admin@gym.local");
+        admin.setURole(UserRole.ADMIN);
+
+        appUserRepository.save(admin);
     }
 }

@@ -1,5 +1,6 @@
 package com.korruptengu.gymcheckinsystem.entity;
 
+import com.korruptengu.gymcheckinsystem.enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

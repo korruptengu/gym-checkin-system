@@ -1,12 +1,12 @@
 package com.korruptengu.gymcheckinsystem.dto.request.member;
 
-import com.korruptengu.gymcheckinsystem.entity.MemberState;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import com.korruptengu.gymcheckinsystem.enums.MemberState;
+import jakarta.validation.constraints.*;
+
+import java.time.LocalDate;
 
 public record PostMemberRequest(
-        @NotBlank String firstname,
-        @NotBlank String lastname,
-        @Email String email,
-        MemberState state
+        @NotNull LocalDate joinDate,
+        @NotNull MemberState state,
+        @NotNull @Min(1) Long appUserId
 ) {}

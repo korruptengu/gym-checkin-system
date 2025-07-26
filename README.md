@@ -27,6 +27,7 @@ Ein React-Frontend ist geplant, um das System perspektivisch als Full-Stack-Anwe
 - Bean Validation (`javax.validation`)
 - Exception Handling mit `@ControllerAdvice`
 - JUnit 5 & Mockito (für Unit-Tests)
+- GitHub Actions (CI/CD) ![CI](https://github.com/korruptengu/gym-checkin-system/actions/workflows/ci.yml/badge.svg) 
 
 ---
 
@@ -41,6 +42,7 @@ Ein React-Frontend ist geplant, um das System perspektivisch als Full-Stack-Anwe
 - `TrainTrainer`: Modelliert das Verhältnis zwischen Ausbildern und auszubildenden Trainern (1:n-Beziehung)
 - PATCH- und PUT-Unterstützung für Teil-/Vollupdates
 - Dateninitialisierung für Entwicklungszwecke
+- Automatisierte Builds und Tests mit GitHub Actions ![CI](https://github.com/korruptengu/gym-checkin-system/actions/workflows/ci.yml/badge.svg)
 
 ---
 

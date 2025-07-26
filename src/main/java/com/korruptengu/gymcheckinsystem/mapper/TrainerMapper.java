@@ -10,14 +10,18 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface TrainerMapper {
+    @Mapping(source = "appUser.id", target = "appUserId")
     TrainerResponse toResponse(Trainer trainer);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "appUser", ignore = true)
     Trainer putRequestToEntity(PutTrainerRequest request);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "appUser", ignore = true)
     Trainer postRequestToEntity(PostTrainerRequest request);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "appUser", ignore = true)
     Trainer patchRequestToEntity(PatchTrainerRequest request);
 }

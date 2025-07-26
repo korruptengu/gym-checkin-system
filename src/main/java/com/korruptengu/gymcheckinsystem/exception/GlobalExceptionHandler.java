@@ -1,12 +1,16 @@
 package com.korruptengu.gymcheckinsystem.exception;
 
+import com.korruptengu.gymcheckinsystem.dto.error.ApiError;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.slf4j.LoggerFactory;
+
+import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -36,8 +40,26 @@ public class GlobalExceptionHandler {
                 .body("Internal Server Error: " + ex.getMessage());
     }
 
+
     @ExceptionHandler(MemberNotFoundException.class)
-    public ResponseEntity<String> handleMemberNotFound(MemberNotFoundException ex){
+    public ResponseEntity<String> handleMemberNotFoundException(MemberNotFoundException ex){
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    /*
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<ApiError> handleMemberNotFound(MemberNotFoundException ex, HttpServletRequest request){
+        ApiError error = buildApiError(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+    */
+
+    @ExceptionHandler(AppUserNotFoundException.class)
+    public ResponseEntity<String> handleAppUserNotFound(AppUserNotFoundException ex){
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ex.getMessage());
@@ -104,5 +126,44 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalPutRequestException.class)
+    public ResponseEntity<String> handleIllegalPutRequest(IllegalPutRequestException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalPatchRequestException.class)
+    public ResponseEntity<String> handleIllegalPatchRequest(IllegalPatchRequestException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalPostRequestException.class)
+    public ResponseEntity<String> handleIllegalPostRequest(IllegalPostRequestException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(RoleConflictException.class)
+    public ResponseEntity<String> handleRoleConflictException(RoleConflictException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ex.getMessage());
+    }
+
+    // Hilfsmethode für Fehlerobjekt
+    private ApiError buildApiError(HttpStatus status, String message, HttpServletRequest request) {
+        return new ApiError(
+                status.value(),
+                status.getReasonPhrase(),
+                message,
+                request.getRequestURI(),
+                LocalDateTime.now()
+        );
     }
 }
