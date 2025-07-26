@@ -2,15 +2,14 @@
 
 Ein webbasiertes System zur Verwaltung von Mitgliedern, Trainern, Kursen und individuellen Trainingseinheiten in einem Fitnessstudio.  
 Das Backend basiert auf Spring Boot.  
-Ein React-Frontend ist geplant, um das System perspektivisch als Full-Stack-Anwendung zu erweitern.
+Ein React-Frontend wird aktuell parallel entwickelt, um das System perspektivisch als Full-Stack-Anwendung zu erweitern.
 
 ---
 
 ## 📌 Motivation
 
 - Praktische Anwendung moderner Backend-Technologien: Spring Boot, JPA, REST, DTO-Pattern, MapStruct
-- Entwicklung einer strukturierten API mit sauberer Schichtenarchitektur
-- Erweiterung des Tech-Stacks um React (geplant)
+- Entwicklung einer strukturierten, robusten API mit sauberer Schichtenarchitektur
 
 ---
 
@@ -20,40 +19,39 @@ Ein React-Frontend ist geplant, um das System perspektivisch als Full-Stack-Anwe
 - Spring Boot
 - Spring Web (REST)
 - Spring Data JPA
+- Spring Security (Basic Auth)
 - Maven
 - H2 / PostgreSQL (konfigurierbar)
 - MapStruct (für DTO-Mapping)
 - Lombok
 - Bean Validation (`javax.validation`)
-- Exception Handling mit `@ControllerAdvice`
+- Exception Handling mit `@ControllerAdvice` + einheitlichem `ApiError`
 - JUnit 5 & Mockito (für Unit-Tests)
-- GitHub Actions (CI/CD) ![CI](https://github.com/korruptengu/gym-checkin-system/actions/workflows/ci.yml/badge.svg) 
+- GitHub Actions (CI/CD) ![CI](https://github.com/korruptengu/gym-checkin-system/actions/workflows/ci.yml/badge.svg)
 
 ---
 
 ## 📁 Features
 
-- CRUD für alle zentralen Entitäten: `Member`, `Trainer`, `TrainingSession`, `CourseType`, `CourseSession`, `CourseBooking`, `CheckIn`, `TrainTrainer`
-- Eingabeverifizierung mit `@Valid`, `@NotNull` etc.
-- Globale Fehlerbehandlung mit sprechenden HTTP-Statuscodes
+- Authentifizierung mit Basic Auth + rollenbasierte Autorisierung (`ADMIN`, `MEMBER`, `TRAINER`, `SERVICE`)
+- Nutzerverwaltung über `AppUser`, verknüpft mit `Member` oder `Trainer`
+- Personal Trainings mit Zeit/Dauer & Buchungssystem für Gruppenkurse
+- Validierung aller Nutzereingaben mit `@Valid`, `@NotNull` etc.
+- Einheitliches Fehlerformat mit `ApiError` für alle Exceptions
 - Trennung von Entities, DTOs, Services, Mappers und Controllern
-- Unterstützung für 1:1 Personal Trainings mit Zeit und Dauer
-- Kursmanagement mit CourseType, CourseSession und CourseBooking
-- `TrainTrainer`: Modelliert das Verhältnis zwischen Ausbildern und auszubildenden Trainern (1:n-Beziehung)
 - PATCH- und PUT-Unterstützung für Teil-/Vollupdates
-- Dateninitialisierung für Entwicklungszwecke
-- Automatisierte Builds und Tests mit GitHub Actions ![CI](https://github.com/korruptengu/gym-checkin-system/actions/workflows/ci.yml/badge.svg)
+- Initialisierung von Testdaten über DataLoader
+- Automatisierte Builds und Tests mit GitHub Actions
 
 ---
 
 ## 🧱 Architekturüberblick
 
-- **Entities**: Member, Trainer, CheckIn, CourseType, CourseSession, CourseBooking, TrainingSession, TrainTrainer
-- **DTOs**: Für alle Requests und Responses, inkl. Validierung
-- **Mapper**: MapStruct zur Konvertierung zwischen DTO und Entity
-- **Services**: Geschäftslogik + Fehlerbehandlung
-- **Controller**: RESTful API mit sinnvollen Statuscodes
-- **Exception Handling**: Einheitlich über `@ControllerAdvice`
+- **Schichten:** Entity → DTO → Mapper → Service → Controller
+- **DTOs:** Für alle Requests/Responses (POST, PUT, PATCH, Response)
+- **Exception Handling:** Einheitlich über `@ControllerAdvice` + `ApiError`
+- **Validierung:** Technische & fachliche Regeln über RequestValidator & Custom Exceptions
+- **Security:** Rollenbasierter Zugriff via `@PreAuthorize` im Controller
 
 ---
 
@@ -61,22 +59,27 @@ Ein React-Frontend ist geplant, um das System perspektivisch als Full-Stack-Anwe
 
 - [x] Member-API (CRUD, Validierung, Fehlerhandling)
 - [x] Trainer-API (CRUD, Validierung, Fehlerhandling)
+- [x] AppUser + Security (Basic Auth, Rollen, Passwort-Hashing)
 - [x] TrainingSession-API (inkl. PATCH/PUT mit UpdateHelper)
-- [x] TrainTrainer-Entität und Struktur
-- [x] CRUD für TrainTrainer
+- [x] TrainTrainer-Struktur + API
 - [x] CRUD für CourseType, CourseSession, CourseBooking
 - [ ] Teilnehmer-API pro Kurs-Session (inkl. Buchungsstatus)
-- [ ] Spezialisierte GET-Endpunkte (z. B. Teilnehmer eines Kurses)
-- [x] Unit-Tests für Service-Schicht (**Angefangen**)
+- [x] Einheitliches Fehlerformat (`ApiError`) in GlobalExceptionHandler
+- [x] Unit-Tests für Service-Schicht (laufender Ausbau)
 - [ ] Swagger/OpenAPI-Dokumentation
-- [ ] Authentifizierung mit Spring Security (optional)
 - [ ] Pagination & Filterung für Listen
 - [ ] Frontend mit React + TypeScript (in Planung)
 
 ---
 
 ## 🚀 Getting Started
+### 🔐 Test-Login (Basic Auth)
 
+Ein Administrator ist vordefiniert für den Zugriff auf geschützte Endpunkte:
+
+- **Benutzername:** `admin`
+- **Passwort:** `admin123`
+- **Rolle:** `ADMIN`
 ```bash
 # Repository klonen
 git clone https://github.com/dein-nutzername/gym-checkin-system.git
@@ -88,14 +91,12 @@ cd gym-checkin-system
 
 ## 🧪 Datenbankkonfiguration
 
-- **Standard:** H2-In-Memory-Datenbank  
-  → Zugriff über: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
-
+- **Standard:** H2-In-Memory-Datenbank  → [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
 - **Optional:** PostgreSQL konfigurierbar über `application.properties`
 
 ---
 
-## 🔌 Beispiel-Endpunkte
+## 🔌 Beispiel-Endpunkte (Auszug)
 
 #### Member
 - `GET /api/members`
@@ -104,14 +105,14 @@ cd gym-checkin-system
 
 #### Trainer
 - `GET /api/trainers`
-- `GET /api/trainers/{id}/trainees` *(geplant)*
+
+#### AppUser
+- `POST /api/app-users`
+- `GET /api/app-users/{id}`
 
 #### TrainingSession
 - `POST /api/training-sessions`
 - `PATCH /api/training-sessions/{id}`
-
-#### CourseSession
-- `GET /api/course-sessions/{id}/participants` *(geplant)*
 
 ---
 
