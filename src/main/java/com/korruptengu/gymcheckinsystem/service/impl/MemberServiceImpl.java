@@ -5,6 +5,7 @@ import com.korruptengu.gymcheckinsystem.dto.response.MemberResponse;
 import com.korruptengu.gymcheckinsystem.entity.AppUser;
 import com.korruptengu.gymcheckinsystem.entity.Member;
 import com.korruptengu.gymcheckinsystem.exception.EmptyUpdateDataException;
+import com.korruptengu.gymcheckinsystem.exception.RoleConflictException;
 import com.korruptengu.gymcheckinsystem.mapper.MemberMapper;
 import com.korruptengu.gymcheckinsystem.repository.MemberRepository;
 import com.korruptengu.gymcheckinsystem.service.MemberService;
@@ -48,8 +49,8 @@ public class MemberServiceImpl implements MemberService {
         RequestValidator.requireNonNull(request, "post", "member");
 
         AppUser appUser = fetcher.fetchAppUser(request.appUserId());
-        if (appUser.getTrainer() != null) throw new IllegalStateException("Der AppUser ist bereits ein Trainer und kann nicht gleichzeitig ein Member sein.");
-        if (appUser.getMember() != null) throw new IllegalStateException("Dieser AppUser ist bereits Member.");
+        if (appUser.getTrainer() != null) throw new RoleConflictException("Der AppUser ist bereits ein Trainer und kann nicht gleichzeitig ein Member sein.");
+        if (appUser.getMember() != null) throw new RoleConflictException("Dieser AppUser ist bereits Member.");
 
         Member member = mapper.postRequestToEntity(request);
         member.setAppUser(appUser);

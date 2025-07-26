@@ -6,6 +6,7 @@ import com.korruptengu.gymcheckinsystem.dto.request.appUser.PutAppUserRequest;
 import com.korruptengu.gymcheckinsystem.dto.response.AppUserResponse;
 import com.korruptengu.gymcheckinsystem.entity.AppUser;
 import com.korruptengu.gymcheckinsystem.exception.EmptyUpdateDataException;
+import com.korruptengu.gymcheckinsystem.exception.RoleConflictException;
 import com.korruptengu.gymcheckinsystem.mapper.AppUserMapper;
 import com.korruptengu.gymcheckinsystem.repository.AppUserRepository;
 import com.korruptengu.gymcheckinsystem.service.AppUserService;
@@ -49,6 +50,11 @@ public class AppUserServiceImpl implements AppUserService {
 
         AppUser created = mapper.postRequestToEntity(request);
         created.setPassword(encoder.encode(request.password()));
+
+        if (request.memberId() != null && request.trainerId() != null) {
+            throw new RoleConflictException("AppUser darf nur eine Rolle haben: MEMBER oder TRAINER.");
+        }
+
         if (request.trainerId() != null) created.setTrainer(fetcher.fetchTrainer(request.trainerId()));
         if (request.memberId() != null) created.setMember(fetcher.fetchMember(request.memberId()));
 
