@@ -1,5 +1,6 @@
 package com.korruptengu.gymcheckinsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.korruptengu.gymcheckinsystem.enums.TrainerState;
 import jakarta.persistence.*;
 import lombok.*;

@@ -66,7 +66,7 @@ Ein React-Frontend wird aktuell parallel entwickelt, um das System perspektivisc
 - [ ] Teilnehmer-API pro Kurs-Session (inkl. Buchungsstatus)
 - [x] Einheitliches Fehlerformat (`ApiError`) in GlobalExceptionHandler
 - [x] Unit-Tests für Service-Schicht (laufender Ausbau)
-- [ ] Swagger/OpenAPI-Dokumentation
+- [x] Swagger/OpenAPI-Dokumentation
 - [ ] Pagination & Filterung für Listen
 - [ ] Frontend mit React + TypeScript (in Planung)
 
@@ -96,23 +96,12 @@ cd gym-checkin-system
 
 ---
 
-## 🔌 Beispiel-Endpunkte (Auszug)
+## 📖 API-Dokumentation
 
-#### Member
-- `GET /api/members`
-- `POST /api/members`
-- `PATCH /api/members/{id}`
+Dank Swagger/OpenAPI steht eine interaktive API-Dokumentation zur Verfügung:
 
-#### Trainer
-- `GET /api/trainers`
-
-#### AppUser
-- `POST /api/app-users`
-- `GET /api/app-users/{id}`
-
-#### TrainingSession
-- `POST /api/training-sessions`
-- `PATCH /api/training-sessions/{id}`
+- **Swagger UI:** [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- **OpenAPI JSON:** [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
 
 ---
 
