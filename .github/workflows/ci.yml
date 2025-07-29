@@ -8,18 +8,31 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Repository laden
-      uses: actions/checkout@v3
+      # Repository auschecken
+      - name: Repository laden
+        uses: actions/checkout@v4
 
-    - name: JDK-Setup für Maven-Build
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '21'
+      # Cache für Maven-Dependencies
 
-    - name: Maven-Build & Tests
-      run: mvn clean verify
+      # JDK-Setup
+      - name: JDK-Setup für Maven-Build
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: maven
+
+      # Maven-Build & Tests
+      - name: Maven-Build & Tests
+        run: mvn clean verify --batch-mode
+
+      # JUnit Tests Berichte
+      - name: JUnit Test Report
+        if: always()
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: '**/target/surefire-reports/TEST-*.xml'
+        continue-on-error: true
