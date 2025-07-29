@@ -70,7 +70,7 @@ class CourseSessionServiceImplTest {
                 1L,
                 1L);
 
-        when(fetcher.fetchCourseSession(courseSessionId)).thenReturn(entity);
+        when(fetcher.fetchCourseSessionById(courseSessionId)).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(responseDto);
 
         // when
@@ -78,7 +78,7 @@ class CourseSessionServiceImplTest {
 
         // then
         assertEquals(responseDto, result);
-        verify(fetcher).fetchCourseSession(courseSessionId);
+        verify(fetcher).fetchCourseSessionById(courseSessionId);
         verify(mapper).toResponse(entity);
     }
 
@@ -101,8 +101,8 @@ class CourseSessionServiceImplTest {
                 1L);
 
         when(mapper.postRequestToEntity(requestDto)).thenReturn(entity);
-        when(fetcher.fetchCourseType(1L)).thenReturn(courseType);
-        when(fetcher.fetchTrainer(1L)).thenReturn(trainer);
+        when(fetcher.fetchCourseTypeById(1L)).thenReturn(courseType);
+        when(fetcher.fetchTrainerById(1L)).thenReturn(trainer);
         when(repository.save(entity)).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(responseDto);
         when(validator.isTrainerAlreadyBooked(entity)).thenReturn(false);
@@ -113,8 +113,8 @@ class CourseSessionServiceImplTest {
         // Then
         assertEquals(responseDto, result);
         verify(mapper).postRequestToEntity(requestDto);
-        verify(fetcher).fetchCourseType(1L);
-        verify(fetcher).fetchTrainer(1L);
+        verify(fetcher).fetchCourseTypeById(1L);
+        verify(fetcher).fetchTrainerById(1L);
         verify(repository).save(entity);
         verify(mapper).toResponse(entity);
         verify(validator).isTrainerAlreadyBooked(entity);
@@ -133,7 +133,7 @@ class CourseSessionServiceImplTest {
         CourseSession entity = new CourseSession();
 
         when(mapper.toResponse(entity)).thenReturn(responseDto);
-        when(fetcher.fetchCourseSession(courseSessionId)).thenReturn(entity);
+        when(fetcher.fetchCourseSessionById(courseSessionId)).thenReturn(entity);
 
 
         // When
@@ -141,7 +141,7 @@ class CourseSessionServiceImplTest {
 
         // Then
         assertEquals(responseDto,result);
-        verify(fetcher).fetchCourseSession(courseSessionId);
+        verify(fetcher).fetchCourseSessionById(courseSessionId);
         verify(repository).delete(entity);
         verify(mapper).toResponse(entity);
     }

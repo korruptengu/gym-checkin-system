@@ -112,8 +112,8 @@ public class DataLoader implements CommandLineRunner {
         AppUser admin = new AppUser();
         admin.setUsername("admin");
         admin.setPassword(encoder.encode("admin123"));
-        admin.setFirstname("System");
-        admin.setLastname("Admin");
+        admin.setFirstname("Max");
+        admin.setLastname("Adminmann");
         admin.setEmail("admin@gym.local");
         admin.setURole(UserRole.ADMIN);
 

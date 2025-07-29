@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,7 +58,7 @@ class AppUserServiceImplTest {
         AppUserResponse responseDto = new AppUserResponse(
                 1L,
                 "peter123",
-                UserRole.MEMBER,
+                "MEMBER",
                 "Peter",
                 "Peterson",
                 "p.peterson@mail.de",
@@ -65,7 +66,7 @@ class AppUserServiceImplTest {
                 null
         );
         when(mapper.postRequestToEntity(requestDto)).thenReturn(entity);
-        when(fetcher.fetchMember(1L)).thenReturn(member);
+        when(fetcher.fetchMemberById(1L)).thenReturn(member);
         when(repository.save(entity)).thenReturn(entity);
         when(mapper.toResponse(entity)).thenReturn(responseDto);
 
@@ -74,7 +75,7 @@ class AppUserServiceImplTest {
 
         // Assert
         assertThat(responseDto.username()).isEqualTo(requestDto.username());
-        assertThat(responseDto.uRole()).isEqualTo(requestDto.uRole());
+        assertEquals("MEMBER", responseDto.role());
         assertThat(responseDto.email()).isEqualTo(requestDto.email());
         verify(repository).save(any());
     }

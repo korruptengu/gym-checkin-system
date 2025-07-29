@@ -36,7 +36,7 @@ public class TrainingSessionServiceImpl implements TrainingSessionService {
 
     @Override
     public TrainingSessionResponse getTrainingSessionById(Long id){
-        TrainingSession session = fetcher.fetchTrainingSession(id);
+        TrainingSession session = fetcher.fetchTrainingSessionById(id);
         return mapper.toResponse(session);
     }
 
@@ -44,8 +44,8 @@ public class TrainingSessionServiceImpl implements TrainingSessionService {
     public TrainingSessionResponse createTrainingSession(PostTrainingSessionRequest request){
         if (request == null) throw new IllegalArgumentException("New data must not be null");
 
-        Member member = fetcher.fetchMember(request.memberId());
-        Trainer trainer = fetcher.fetchTrainer(request.trainerId());
+        Member member = fetcher.fetchMemberById(request.memberId());
+        Trainer trainer = fetcher.fetchTrainerById(request.trainerId());
         TrainingSession created = mapper.postRequestToEntity(request);
         created.setTrainer(trainer);
         created.setMember(member);
@@ -56,7 +56,7 @@ public class TrainingSessionServiceImpl implements TrainingSessionService {
 
     @Override
     public TrainingSessionResponse deleteTrainingSessionById(Long id){
-        TrainingSession deleted = fetcher.fetchTrainingSession(id);
+        TrainingSession deleted = fetcher.fetchTrainingSessionById(id);
         trainingSessionRepository.delete(deleted);
         return mapper.toResponse(deleted);
     }
@@ -65,10 +65,10 @@ public class TrainingSessionServiceImpl implements TrainingSessionService {
     public TrainingSessionResponse updateTrainingSessionCompletely(Long id, PutTrainingSessionRequest request){
         if (request == null) throw new IllegalArgumentException("Update data must not be null");
 
-        TrainingSession existing = fetcher.fetchTrainingSession(id);
+        TrainingSession existing = fetcher.fetchTrainingSessionById(id);
 
-        Member member = fetcher.fetchMember(request.memberId());
-        Trainer trainer = fetcher.fetchTrainer(request.trainerId());
+        Member member = fetcher.fetchMemberById(request.memberId());
+        Trainer trainer = fetcher.fetchTrainerById(request.trainerId());
         TrainingSession updateData = mapper.putRequestToEntity(request);
         updateData.setMember(member);
         updateData.setTrainer(trainer);
@@ -86,13 +86,13 @@ public class TrainingSessionServiceImpl implements TrainingSessionService {
         if (TrainingSessionUpdateHelper.isAllFieldsNull(mapper.patchRequestToEntity(request)))
             throw new EmptyUpdateDataException();
 
-        TrainingSession existing = fetcher.fetchTrainingSession(id);
+        TrainingSession existing = fetcher.fetchTrainingSessionById(id);
 
         Trainer trainer = request.trainerId() != null
-                ? fetcher.fetchTrainer(request.trainerId())
+                ? fetcher.fetchTrainerById(request.trainerId())
                 : null;
         Member member = request.memberId() != null
-                ? fetcher.fetchMember(request.memberId())
+                ? fetcher.fetchMemberById(request.memberId())
                 : null;
 
         TrainingSession updateData = mapper.patchRequestToEntity(request);

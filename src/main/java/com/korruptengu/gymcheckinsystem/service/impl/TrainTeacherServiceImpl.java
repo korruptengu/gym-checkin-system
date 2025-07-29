@@ -34,7 +34,7 @@ public class TrainTeacherServiceImpl implements TrainTeacherService {
 
     @Override
     public TrainTeacherResponse getTrainTeacherById(TrainTeacherId id) {
-        TrainTeacher assignment = fetcher.fetchTrainTeacher(id);
+        TrainTeacher assignment = fetcher.fetchTrainTeacherById(id);
         return mapper.toResponse(assignment);
     }
 
@@ -43,8 +43,8 @@ public class TrainTeacherServiceImpl implements TrainTeacherService {
         if (request == null) throw new IllegalArgumentException("New data must not be null");
 
         TrainTeacher created = mapper.postRequestToEntity(request);
-        created.setInstructor(fetcher.fetchTrainer(request.instructorId()));
-        created.setStudent(fetcher.fetchTrainer(request.studentId()));
+        created.setInstructor(fetcher.fetchTrainerById(request.instructorId()));
+        created.setStudent(fetcher.fetchTrainerById(request.studentId()));
 
         repository.save(created);
         return mapper.toResponse(created);
@@ -52,7 +52,7 @@ public class TrainTeacherServiceImpl implements TrainTeacherService {
 
     @Override
     public TrainTeacherResponse deleteTrainTeacherById(TrainTeacherId id) {
-        TrainTeacher deleted = fetcher.fetchTrainTeacher(id);
+        TrainTeacher deleted = fetcher.fetchTrainTeacherById(id);
         repository.delete(deleted);
         return mapper.toResponse(deleted);
     }

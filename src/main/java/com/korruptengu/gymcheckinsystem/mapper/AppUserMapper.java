@@ -12,23 +12,24 @@ public interface AppUserMapper {
 
     @Mapping(source = "member.id", target = "memberId")
     @Mapping(source = "trainer.id", target = "trainerId")
+    @Mapping(source = "URole", target = "role", defaultValue = "UNKNOWN")
     AppUserResponse toResponse(AppUser appUser);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "member", ignore = true)
     @Mapping(target = "trainer", ignore = true)
-    public AppUser postRequestToEntity(PostAppUserRequest request);
+    AppUser postRequestToEntity(PostAppUserRequest request);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "member", ignore = true)
     @Mapping(target = "trainer", ignore = true)
-    public AppUser putRequestToEntity(PutAppUserRequest request);
+    AppUser putRequestToEntity(PutAppUserRequest request);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "member", ignore = true)
     @Mapping(target = "trainer", ignore = true)
-    public AppUser patchRequestToEntity(PatchAppUserRequest request);
+    AppUser patchRequestToEntity(PatchAppUserRequest request);
 }

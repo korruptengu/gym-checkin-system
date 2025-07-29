@@ -37,21 +37,21 @@ public class CourseBookingServiceImpl implements CourseBookingService {
     }
 
     public CourseBookingResponse getCourseBookingById(CourseBookingId id){
-        CourseBooking courseBooking = fetcher.fetchCourseBooking(id);
+        CourseBooking courseBooking = fetcher.fetchCourseBookingById(id);
         return mapper.toResponse(courseBooking);
     }
     public CourseBookingResponse createCourseBooking(PostCourseBookingRequest request){
         if(request == null) throw new IllegalArgumentException("New data must not be null");
 
         CourseBooking created = mapper.postRequestToEntity(request);
-        created.setMember(fetcher.fetchMember(request.memberId()));
-        created.setCourseSession(fetcher.fetchCourseSession(request.courseSessionId()));
+        created.setMember(fetcher.fetchMemberById(request.memberId()));
+        created.setCourseSession(fetcher.fetchCourseSessionById(request.courseSessionId()));
 
         courseBookingRepository.save(created);
         return mapper.toResponse(created);
     }
     public CourseBookingResponse deleteCourseBookingById(CourseBookingId id){
-        CourseBooking deleted = fetcher.fetchCourseBooking(id);
+        CourseBooking deleted = fetcher.fetchCourseBookingById(id);
         courseBookingRepository.delete(deleted);
         return mapper.toResponse(deleted);
     }
@@ -59,10 +59,10 @@ public class CourseBookingServiceImpl implements CourseBookingService {
         if (request == null) throw new IllegalArgumentException("Update data must be not null");
 
         CourseBooking updatedData = mapper.putRequestToEntity(request);
-        updatedData.setMember(fetcher.fetchMember(request.memberId()));
-        updatedData.setCourseSession(fetcher.fetchCourseSession(request.courseSessionId()));
+        updatedData.setMember(fetcher.fetchMemberById(request.memberId()));
+        updatedData.setCourseSession(fetcher.fetchCourseSessionById(request.courseSessionId()));
 
-        CourseBooking existing = fetcher.fetchCourseBooking(id);
+        CourseBooking existing = fetcher.fetchCourseBookingById(id);
 
         CourseBookingUpdateHelper.updateCompletely(existing, updatedData);
         return mapper.toResponse(existing);
@@ -72,16 +72,16 @@ public class CourseBookingServiceImpl implements CourseBookingService {
 
         CourseBooking updatedData = mapper.patchRequestToEntity(request);
         Member member = request.memberId() != null
-                ? fetcher.fetchMember(request.memberId())
+                ? fetcher.fetchMemberById(request.memberId())
                 : null;
         updatedData.setMember(member);
         CourseSession courseSession = request.courseSessionId() != null
-                ? fetcher.fetchCourseSession(request.courseSessionId())
+                ? fetcher.fetchCourseSessionById(request.courseSessionId())
                 : null;
         updatedData.setCourseSession(courseSession);
         if(CourseBookingUpdateHelper.isAllFieldsNull(updatedData)) throw new EmptyUpdateDataException();
 
-        CourseBooking existing = fetcher.fetchCourseBooking(id);
+        CourseBooking existing = fetcher.fetchCourseBookingById(id);
 
         CourseBookingUpdateHelper.updatePartially(existing, updatedData);
         return mapper.toResponse(existing);

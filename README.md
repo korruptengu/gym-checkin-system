@@ -19,7 +19,7 @@ Ein React-Frontend wird aktuell parallel entwickelt, um das System perspektivisc
 - Spring Boot
 - Spring Web (REST)
 - Spring Data JPA
-- Spring Security (Basic Auth)
+- Spring Security (JWT-basierte Authentifizierung)
 - Maven
 - H2 / PostgreSQL (konfigurierbar)
 - MapStruct (für DTO-Mapping)
@@ -33,8 +33,9 @@ Ein React-Frontend wird aktuell parallel entwickelt, um das System perspektivisc
 
 ## 📁 Features
 
-- Authentifizierung mit Basic Auth + rollenbasierte Autorisierung (`ADMIN`, `MEMBER`, `TRAINER`, `SERVICE`)
-- Nutzerverwaltung über `AppUser`, verknüpft mit `Member` oder `Trainer`
+- Authentifizierung mit Login-Endpunkt + JWT-Token
+- Endpoint /api/appUser/me für Benutzerdaten des eingeloggten Users
+- Nutzerverwaltung über AppUser, verknüpft mit Member oder Trainer
 - Personal Trainings mit Zeit/Dauer & Buchungssystem für Gruppenkurse
 - Validierung aller Nutzereingaben mit `@Valid`, `@NotNull` etc.
 - Einheitliches Fehlerformat mit `ApiError` für alle Exceptions
@@ -51,7 +52,7 @@ Ein React-Frontend wird aktuell parallel entwickelt, um das System perspektivisc
 - **DTOs:** Für alle Requests/Responses (POST, PUT, PATCH, Response)
 - **Exception Handling:** Einheitlich über `@ControllerAdvice` + `ApiError`
 - **Validierung:** Technische & fachliche Regeln über RequestValidator & Custom Exceptions
-- **Security:** Rollenbasierter Zugriff via `@PreAuthorize` im Controller
+- **Security:** Token-basierte Authentifizierung mit JWT & rollenbasierter Zugriff via `@PreAuthorize` im Controller
 
 ---
 
@@ -59,7 +60,6 @@ Ein React-Frontend wird aktuell parallel entwickelt, um das System perspektivisc
 
 - [x] Member-API (CRUD, Validierung, Fehlerhandling)
 - [x] Trainer-API (CRUD, Validierung, Fehlerhandling)
-- [x] AppUser + Security (Basic Auth, Rollen, Passwort-Hashing)
 - [x] TrainingSession-API (inkl. PATCH/PUT mit UpdateHelper)
 - [x] TrainTrainer-Struktur + API
 - [x] CRUD für CourseType, CourseSession, CourseBooking
@@ -67,19 +67,16 @@ Ein React-Frontend wird aktuell parallel entwickelt, um das System perspektivisc
 - [x] Einheitliches Fehlerformat (`ApiError`) in GlobalExceptionHandler
 - [x] Unit-Tests für Service-Schicht (laufender Ausbau)
 - [x] Swagger/OpenAPI-Dokumentation
+- [x] AppUser + Security (JWT, Rollen, Passwort-Hashing)
+- [x] Endpoint /api/appUser/me
 - [ ] Pagination & Filterung für Listen
 - [ ] Frontend mit React + TypeScript (in Planung)
 
 ---
 
 ## 🚀 Getting Started
-### 🔐 Test-Login (Basic Auth)
+### Projekt klonen und starten
 
-Ein Administrator ist vordefiniert für den Zugriff auf geschützte Endpunkte:
-
-- **Benutzername:** `admin`
-- **Passwort:** `admin123`
-- **Rolle:** `ADMIN`
 ```bash
 # Repository klonen
 git clone https://github.com/dein-nutzername/gym-checkin-system.git
@@ -87,6 +84,54 @@ cd gym-checkin-system
 
 # Starten mit Maven
 ./mvnw spring-boot:run
+```
+### 🔐 Test-Login
+Ein Administrator ist vordefiniert für den Zugriff auf geschützte Endpunkte:
+
+- **Benutzername:** `admin`
+- **Passwort:** `admin123`
+- **Rolle:** `ADMIN`
+- 
+### 🔐 Login und Token-Authentifizierung
+
+#### Request
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+```
+#### Response
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "username": "admin",
+  "role": "ADMIN"
+}
+```
+
+### 👤 AppUser-Endpoint
+#### Request
+```http
+GET /api/appusers/me
+Authorization: Bearer <token>
+
+{
+    "id": 5,
+    "username": "admin",
+    "role": "ADMIN",
+    "firstname": "Max",
+    "lastname": "Adminmann",
+    "email": "admin@gym.local",
+    "memberId": null,
+    "trainerId": null
+}
 ```
 
 ## 🧪 Datenbankkonfiguration

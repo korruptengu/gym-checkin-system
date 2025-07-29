@@ -27,7 +27,7 @@ public class CourseTypeServiceImpl implements CourseTypeService {
     @Override
     public List<CourseTypeResponse> getAllCourseTypes() {
         List<CourseType> allCourseTypes = repository.findAll();
-        List<CourseTypeResponse> responseList = new ArrayList<CourseTypeResponse>();
+        List<CourseTypeResponse> responseList = new ArrayList<>();
         for (CourseType courseType : allCourseTypes) {
             responseList.add(mapper.toResponse(courseType));
         }
@@ -36,7 +36,7 @@ public class CourseTypeServiceImpl implements CourseTypeService {
 
     @Override
     public CourseTypeResponse getCourseTypeById(Long id){
-        CourseType courseType = fetcher.fetchCourseType(id);
+        CourseType courseType = fetcher.fetchCourseTypeById(id);
         return mapper.toResponse(courseType);
     }
 
@@ -48,7 +48,7 @@ public class CourseTypeServiceImpl implements CourseTypeService {
 
     @Override
     public CourseTypeResponse deleteCourseTypeById(Long id){
-        CourseType deleted = fetcher.fetchCourseType(id);
+        CourseType deleted = fetcher.fetchCourseTypeById(id);
         repository.delete(deleted);
         return mapper.toResponse(deleted);
     }
@@ -56,7 +56,7 @@ public class CourseTypeServiceImpl implements CourseTypeService {
     @Override
     public CourseTypeResponse updateCourseTypeCompletely(Long id, PutCourseTypeRequest request) {
         if (request == null) throw new IllegalArgumentException("Update data must not be null");
-        CourseType existing = fetcher.fetchCourseType(id);
+        CourseType existing = fetcher.fetchCourseTypeById(id);
         CourseTypeUpdateHelper.updateCompletely(existing, mapper.putRequestToEntity(request));
         return mapper.toResponse(repository.save(existing));
     }
@@ -66,7 +66,7 @@ public class CourseTypeServiceImpl implements CourseTypeService {
         if (request == null) throw new IllegalArgumentException("Update data must not be null");
         CourseType updateData = mapper.patchRequestToEntity(request);
         if (CourseTypeUpdateHelper.isAllFieldsNull(updateData)) throw new EmptyUpdateDataException();
-        CourseType existing = fetcher.fetchCourseType(id);
+        CourseType existing = fetcher.fetchCourseTypeById(id);
         CourseTypeUpdateHelper.updatePartially(existing, updateData);
         return mapper.toResponse(repository.save(existing));
     }

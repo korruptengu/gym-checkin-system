@@ -39,14 +39,14 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public TrainerResponse getTrainerById(Long id){
-        return mapper.toResponse(fetcher.fetchTrainer(id));
+        return mapper.toResponse(fetcher.fetchTrainerById(id));
     }
 
     @Override
     public TrainerResponse createTrainer(PostTrainerRequest request){
         RequestValidator.requireNonNull(request, "post", "trainer");
 
-        AppUser appUser = fetcher.fetchAppUser(request.appUserId());
+        AppUser appUser = fetcher.fetchAppUserById(request.appUserId());
         if (appUser.getMember() != null) throw new RoleConflictException("Der AppUser ist bereits ein Member und kann nicht gleichzeitig ein Trainer sein.");
         if (appUser.getTrainer() != null) throw new RoleConflictException("Dieser AppUser ist bereits Trainer.");
 
@@ -61,7 +61,7 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public TrainerResponse deleteTrainerById(Long id){
-        Trainer deleted = fetcher.fetchTrainer(id);
+        Trainer deleted = fetcher.fetchTrainerById(id);
         AppUser user = deleted.getAppUser();
         user.setTrainer(null);
         deleted.setAppUser(null);
@@ -73,7 +73,7 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public TrainerResponse updateTrainerCompletely(Long id, PutTrainerRequest request){
         RequestValidator.requireNonNull(request, "put", "trainer");
-        Trainer existing = fetcher.fetchTrainer(id);
+        Trainer existing = fetcher.fetchTrainerById(id);
 
         TrainerUpdateHelper.updateCompletely(existing, mapper.putRequestToEntity(request));
 
@@ -86,7 +86,7 @@ public class TrainerServiceImpl implements TrainerService {
         Trainer updateData = mapper.patchRequestToEntity(request);
 
         if (TrainerUpdateHelper.isAllFieldsNull(updateData)) throw new EmptyUpdateDataException();
-        Trainer existing = fetcher.fetchTrainer(id);
+        Trainer existing = fetcher.fetchTrainerById(id);
         TrainerUpdateHelper.updatePartially(existing, updateData);
 
         return mapper.toResponse(repository.save(existing));

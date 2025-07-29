@@ -38,7 +38,7 @@ public class CourseSessionServiceImpl implements CourseSessionService {
 
     @Override
     public CourseSessionResponse getCourseSessionById(Long id) {
-        CourseSession session = fetcher.fetchCourseSession(id);
+        CourseSession session = fetcher.fetchCourseSessionById(id);
         return mapper.toResponse(session);
     }
 
@@ -47,8 +47,8 @@ public class CourseSessionServiceImpl implements CourseSessionService {
         if (request == null) throw new IllegalArgumentException("New data must not be null");
 
         CourseSession created = mapper.postRequestToEntity(request);
-        created.setCourseType(fetcher.fetchCourseType(request.courseTypeId()));
-        created.setTrainer(fetcher.fetchTrainer(request.trainerId()));
+        created.setCourseType(fetcher.fetchCourseTypeById(request.courseTypeId()));
+        created.setTrainer(fetcher.fetchTrainerById(request.trainerId()));
 
         if(validator.isTrainerAlreadyBooked(created)) {
             throw new TrainerAlreadyBookedException(
@@ -62,7 +62,7 @@ public class CourseSessionServiceImpl implements CourseSessionService {
 
     @Override
     public CourseSessionResponse deleteCourseSessionById(Long id) {
-        CourseSession session = fetcher.fetchCourseSession(id);
+        CourseSession session = fetcher.fetchCourseSessionById(id);
         repository.delete(session);
         return mapper.toResponse(session);
     }
@@ -71,10 +71,10 @@ public class CourseSessionServiceImpl implements CourseSessionService {
     public CourseSessionResponse updateCourseSessionCompletely(Long id, PutCourseSessionRequest request) {
         if (request == null) throw new IllegalArgumentException("Update data must not be null");
 
-        CourseSession existing = fetcher.fetchCourseSession(id);
+        CourseSession existing = fetcher.fetchCourseSessionById(id);
 
-        CourseType courseType = fetcher.fetchCourseType(request.courseTypeId());
-        Trainer trainer = fetcher.fetchTrainer(request.trainerId());
+        CourseType courseType = fetcher.fetchCourseTypeById(request.courseTypeId());
+        Trainer trainer = fetcher.fetchTrainerById(request.trainerId());
 
         CourseSession updateData = mapper.putRequestToEntity(request);
         updateData.setCourseType(courseType);
@@ -98,11 +98,11 @@ public class CourseSessionServiceImpl implements CourseSessionService {
         if (request == null) throw new IllegalArgumentException("Update data must not be null");
 
         CourseType courseType = request.courseTypeId() != null
-                ? fetcher.fetchCourseType(request.courseTypeId())
+                ? fetcher.fetchCourseTypeById(request.courseTypeId())
                 : null;
 
         Trainer trainer = request.trainerId() != null
-                ? fetcher.fetchTrainer(request.trainerId())
+                ? fetcher.fetchTrainerById(request.trainerId())
                 : null;
 
         CourseSession partialUpdate = mapper.patchRequestToEntity(request);
@@ -111,7 +111,7 @@ public class CourseSessionServiceImpl implements CourseSessionService {
         if (CourseSessionUpdateHelper.isAllFieldsNull(partialUpdate))
             throw new EmptyUpdateDataException();
 
-        CourseSession existing = fetcher.fetchCourseSession(id);
+        CourseSession existing = fetcher.fetchCourseSessionById(id);
         CourseSession merged = CourseSessionUpdateHelper.buildMergeCourseSession(existing, partialUpdate);
 
         if(validator.isTrainerAlreadyBookedExceptSelf(merged, id)) {

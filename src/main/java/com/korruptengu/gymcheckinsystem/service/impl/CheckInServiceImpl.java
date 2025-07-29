@@ -39,7 +39,7 @@ public class CheckInServiceImpl implements CheckInService {
 
     @Override
     public CheckInResponse getCheckInById(Long id){
-        CheckIn checkIn = fetcher.fetchCheckIn(id);
+        CheckIn checkIn = fetcher.fetchCheckInById(id);
         return mapper.toResponse(checkIn);
     }
 
@@ -47,14 +47,14 @@ public class CheckInServiceImpl implements CheckInService {
     public CheckInResponse createCheckIn(PostCheckInRequest request){
         if(request == null) throw new IllegalArgumentException("New data must not be null");
         CheckIn created = mapper.postRequestToEntity(request);
-        created.setMember(fetcher.fetchMember(request.memberId()));
+        created.setMember(fetcher.fetchMemberById(request.memberId()));
         checkInRepository.save(created);
         return mapper.toResponse(created);
     }
 
     @Override
     public CheckInResponse deleteCheckInById(Long id){
-        CheckIn checkIn = fetcher.fetchCheckIn(id);
+        CheckIn checkIn = fetcher.fetchCheckInById(id);
         checkInRepository.delete(checkIn);
         return mapper.toResponse(checkIn);
     }
@@ -63,8 +63,8 @@ public class CheckInServiceImpl implements CheckInService {
     public CheckInResponse updateCheckInCompletely(Long id, PutCheckInRequest request){
         if (request == null) throw new IllegalArgumentException("Update data must be not null");
 
-        CheckIn existing = fetcher.fetchCheckIn(id);
-        Member member = fetcher.fetchMember(request.memberId());
+        CheckIn existing = fetcher.fetchCheckInById(id);
+        Member member = fetcher.fetchMemberById(request.memberId());
         CheckIn updateData = mapper.putRequestToEntity(request);
         updateData.setMember(member);
 
@@ -78,10 +78,10 @@ public class CheckInServiceImpl implements CheckInService {
     public CheckInResponse updateCheckInPartially(Long id, PatchCheckInRequest request){
         if (request == null) throw new IllegalArgumentException("Update data must be not null");
 
-        CheckIn existing = fetcher.fetchCheckIn(id);
+        CheckIn existing = fetcher.fetchCheckInById(id);
 
         Member member = request.memberId() != null
-                ? fetcher.fetchMember(request.memberId())
+                ? fetcher.fetchMemberById(request.memberId())
                 : null;
 
         CheckIn updateData = mapper.patchRequestToEntity(request);

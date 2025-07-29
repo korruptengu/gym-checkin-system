@@ -7,7 +7,9 @@ import com.korruptengu.gymcheckinsystem.service.AppUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.net.URI;
 import java.util.List;
@@ -30,6 +32,13 @@ public class AppUserController {
     @GetMapping(ID)
     public ResponseEntity<AppUserResponse> getAppUserById(@PathVariable Long id) {
         AppUserResponse user = service.getAppUserById(id);
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<AppUserResponse> getCurrentUser(@AuthenticationPrincipal Jwt principal){
+        AppUserResponse user = service.getCurrentUser(principal);
         return ResponseEntity.ok(user);
     }
 

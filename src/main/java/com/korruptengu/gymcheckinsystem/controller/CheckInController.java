@@ -5,7 +5,6 @@ import com.korruptengu.gymcheckinsystem.dto.response.CheckInResponse;
 import com.korruptengu.gymcheckinsystem.service.CheckInService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

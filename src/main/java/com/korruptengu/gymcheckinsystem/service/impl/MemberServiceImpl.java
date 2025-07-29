@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberResponse getMemberById(Long id){
-        Member member = fetcher.fetchMember(id);
+        Member member = fetcher.fetchMemberById(id);
         return mapper.toResponse(member);
     }
 
@@ -48,7 +48,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponse createMember(PostMemberRequest request){
         RequestValidator.requireNonNull(request, "post", "member");
 
-        AppUser appUser = fetcher.fetchAppUser(request.appUserId());
+        AppUser appUser = fetcher.fetchAppUserById(request.appUserId());
         if (appUser.getTrainer() != null) throw new RoleConflictException("Der AppUser ist bereits ein Trainer und kann nicht gleichzeitig ein Member sein.");
         if (appUser.getMember() != null) throw new RoleConflictException("Dieser AppUser ist bereits Member.");
 
@@ -63,7 +63,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberResponse deleteMemberById(Long id){
-        Member deleted = fetcher.fetchMember(id);
+        Member deleted = fetcher.fetchMemberById(id);
         AppUser user = deleted.getAppUser();
         user.setMember(null);
         deleted.setAppUser(null);
@@ -75,7 +75,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberResponse updateMemberCompletely(Long id, PutMemberRequest request){
         RequestValidator.requireNonNull(request, "put", "member");
-        Member existing = fetcher.fetchMember(id);
+        Member existing = fetcher.fetchMemberById(id);
 
         MemberUpdateHelper.updateCompletely(existing, mapper.putRequestToEntity(request));
 
@@ -88,7 +88,7 @@ public class MemberServiceImpl implements MemberService {
         Member updateData = mapper.patchRequestToEntity(request);
 
         if (MemberUpdateHelper.isAllFieldsNull(updateData)) throw new EmptyUpdateDataException();
-        Member existing = fetcher.fetchMember(id);
+        Member existing = fetcher.fetchMemberById(id);
         MemberUpdateHelper.updatePartially(existing, updateData);
 
         return mapper.toResponse(repository.save(existing));

@@ -1,10 +1,7 @@
 package com.korruptengu.gymcheckinsystem.security;
 
-import com.korruptengu.gymcheckinsystem.entity.AppUser;
-import com.korruptengu.gymcheckinsystem.repository.AppUserRepository;
+import com.korruptengu.gymcheckinsystem.service.fetcher.EntityFetcher;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,18 +13,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final AppUserRepository repository;
+    private final EntityFetcher fetcher;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        AppUser user = repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Benutzer mit dem Benutzernamen: " + username + " nicht gefunden."));
-
-        return new User(
-                user.getUsername(),
-                user.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_" + user.getURole().name()))
-        );
+        return new UserDetailsImpl(fetcher.fetchAppUserByUsername(username));
     }
 }
